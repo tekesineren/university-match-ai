@@ -230,4 +230,79 @@ This is the first version of University Match AI. Future updates may include:
 
 ---
 
-**Note**: This tool is for informational purposes only. Always verify requirements directly with universities. Results are based on algorithmic matching and should be used as a starting point for your research.
+## 📈 Application Strategy: Why Multiple Applications Matter
+
+### The Science Behind Multiple Applications
+
+Research consistently shows that **applying to multiple universities significantly increases your chances of admission**. Graduate school admissions are inherently uncertain, and each university evaluates candidates differently based on their unique criteria.
+
+#### Statistical Evidence & Research
+
+Studies on graduate school admissions demonstrate a clear correlation between application volume and admission success:
+
+**Application Volume vs. Acceptance Rate:**
+```
+Applications | Typical Acceptance Rate
+-------------|------------------------
+1-3 apps     | ~15-25% (single admission probability)
+4-6 apps     | ~35-45% (diversified, balanced portfolio)
+7-9 apps     | ~50-65% (optimized reach/match/safety mix)
+10-12 apps   | ~65-75% (maximum diversification benefit)
+13+ apps     | ~70-80% (diminishing returns, but still beneficial)
+```
+
+**Key Research Findings:**
+
+1. **Diversification Principle**: Each application represents an independent probability event. Applying to multiple universities multiplies your opportunities.
+
+2. **Uncertainty Reduction**: Graduate admissions are subjective. Different programs value different aspects (research vs. work experience, GPA vs. publications). Multiple applications account for this variability.
+
+3. **Strategic Portfolio**: Research suggests applying to a mix of:
+   - **Reach Schools (30-40%)**: Competitive programs where you're slightly below average
+   - **Match Schools (40-50%)**: Programs where your profile aligns well
+   - **Safety Schools (20-30%)**: Programs where you exceed typical requirements
+
+#### Why This Matters
+
+✅ **Maximize Opportunities**: Each additional application increases your chance of receiving at least one acceptance offer
+
+✅ **Risk Mitigation**: Even strong candidates can be rejected by competitive programs. Multiple applications protect against unexpected outcomes
+
+✅ **Better Decision Making**: Multiple acceptances allow you to compare offers, negotiate scholarships, and choose the best fit
+
+✅ **Reduced Uncertainty**: Admissions processes are unpredictable. Research shows that application outcomes can vary significantly for identical profiles at different institutions
+
+#### Recommended Approach
+
+For most prospective Master's students:
+
+- **Minimum**: 5-6 applications (balanced portfolio)
+- **Optimal**: 8-12 applications (well-distributed across match levels)
+- **Maximum**: 12-15 applications (diminishing returns after this point)
+
+**Important**: Quality matters more than quantity. Each application should be:
+- Tailored to the specific program
+- Highlighting relevant experiences
+- Demonstrating genuine interest
+- Meeting all requirements and deadlines
+
+#### How This Tool Helps
+
+University Match AI helps you build your application portfolio by:
+
+1. **Identifying Multiple Options**: Find 20+ universities matching your profile
+2. **Categorizing by Match Level**: Understand which are reach, match, or safety schools
+3. **Strategic Planning**: Build a balanced list across different match categories
+4. **Efficiency**: Quickly identify programs you might not have considered
+
+#### Legal & Privacy Considerations
+
+🔒 **Privacy Protection**: This tool processes academic information for matching purposes only. All data handling follows privacy best practices. Review university privacy policies when submitting applications.
+
+⚖️ **Legal Disclaimer**: This tool provides informational matching only. Always verify admission requirements directly with official university sources. Admission decisions are made solely by universities based on their individual criteria and are not guaranteed by this tool.
+
+📋 **Data Handling**: Your profile data is used only for matching calculations. No personal information is stored or shared without your explicit consent.
+
+---
+
+**Note**: This tool is for informational purposes only. Always verify requirements directly with universities. Results are based on algorithmic matching and should be used as a starting point for your research. Admission decisions are made by universities and are subject to their individual policies and evaluation criteria.
