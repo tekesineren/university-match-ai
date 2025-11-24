@@ -214,7 +214,11 @@ If you're planning to customize this tool for your own use case, we highly recom
 
 ## 📅 Version & Roadmap
 
-**Current Version: 1.0** - Initial Release
+**Current Version: 1.1** - Enhanced Form Validation & User Experience
+
+See [RELEASE_NOTES.md](RELEASE_NOTES.md) for detailed changelog.
+
+**Previous Version: 1.0** - Initial Release
 
 This is the first version of University Match AI. Future updates may include:
 

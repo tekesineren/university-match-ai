@@ -206,6 +206,9 @@ function InputForm({ onSubmit, loading, initialData = null }) {
   // CV'den gelen önerileri simüle et (gerçekte CV parse edilecek)
   const [suggestedBackgrounds, setSuggestedBackgrounds] = useState([])
   
+  // Field-level error tracking
+  const [fieldErrors, setFieldErrors] = useState({})
+  
   // Initial data varsa formu doldur (CV'den gelen veriler)
   useEffect(() => {
     if (initialData) {
@@ -232,10 +235,7 @@ function InputForm({ onSubmit, loading, initialData = null }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
+    handleFieldChange(name, value)
   }
 
   const handleBackgroundToggle = (option) => {
@@ -257,6 +257,14 @@ function InputForm({ onSubmit, loading, initialData = null }) {
           : [...prev.background, option]
       }))
     }
+    // Clear background error when user selects/deselects
+    if (fieldErrors.background) {
+      setFieldErrors(prev => {
+        const newErrors = { ...prev }
+        delete newErrors.background
+        return newErrors
+      })
+    }
   }
 
   const handleOtherInputChange = (e) => {
@@ -266,6 +274,14 @@ function InputForm({ onSubmit, loading, initialData = null }) {
       otherBackground: value, // Original case'i koru
       otherConfirmed: false // Input değiştiğinde confirmation'ı sıfırla
     }))
+    // Clear error when user starts typing
+    if (fieldErrors.otherBackground) {
+      setFieldErrors(prev => {
+        const newErrors = { ...prev }
+        delete newErrors.otherBackground
+        return newErrors
+      })
+    }
   }
 
   const handleOtherConfirm = () => {
@@ -306,25 +322,105 @@ function InputForm({ onSubmit, loading, initialData = null }) {
     }))
   }
 
+  // Validate form and return errors
+  const validateForm = () => {
+    const errors = {}
+    
+    // Required field: GPA
+    if (!formData.gpa || formData.gpa.trim() === '') {
+      errors.gpa = 'Not ortalaması zorunludur'
+    } else {
+      const gpa = parseFloat(formData.gpa)
+      const system = gradingSystems[formData.gradingSystem]
+      if (isNaN(gpa) || gpa < system.min || gpa > system.max) {
+        errors.gpa = `Not ortalaması ${system.min}-${system.max} arasında olmalıdır`
+      }
+    }
+    
+    // Required field: Language
+    if (!formData.language || formData.language === '') {
+      errors.language = 'Yabancı dil seçimi zorunludur'
+    }
+    
+    // Required field: Language Test Type (if language is selected)
+    if (formData.language && (!formData.languageTestType || formData.languageTestType === '')) {
+      errors.languageTestType = 'Dil sınavı seçimi zorunludur'
+    }
+    
+    // Required field: Language Test Score (if test type is selected)
+    if (formData.languageTestType && (!formData.languageTestScore || formData.languageTestScore.trim() === '')) {
+      errors.languageTestScore = 'Dil sınavı skoru zorunludur'
+    } else if (formData.languageTestScore) {
+      const score = parseFloat(formData.languageTestScore)
+      const countryTests = languageTestsByCountry[formData.country] || languageTestsByCountry['other']
+      const languageTests = countryTests[formData.language] || countryTests['english'] || []
+      const selectedTest = languageTests.find(t => t.value === formData.languageTestType)
+      if (selectedTest && (isNaN(score) || score < selectedTest.min || score > selectedTest.max)) {
+        errors.languageTestScore = `Skor ${selectedTest.min}-${selectedTest.max} arasında olmalıdır`
+      }
+    }
+    
+    // Required field: Background
+    if (formData.background.length === 0) {
+      errors.background = 'En az bir background alanı seçmeniz gerekmektedir'
+    }
+    
+    // Required field: Other background (if selected)
+    if (formData.background.includes('other')) {
+      if (!formData.otherConfirmed) {
+        errors.otherBackground = 'Lütfen "Other" alanını doldurup onaylayın (✓ butonuna basın)'
+      } else if (!formData.otherBackground || formData.otherBackground.trim() === '') {
+        errors.otherBackground = 'Lütfen "Other" alanını doldurun'
+      }
+    }
+    
+    return errors
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
     
-    // "Other" seçildiyse ama confirm edilmediyse uyar
-    if (formData.background.includes('other') && !formData.otherConfirmed) {
-      alert('Lütfen "Other" alanını doldurup onaylayın (✓ butonuna basın)')
+    // Validate form
+    const errors = validateForm()
+    
+    if (Object.keys(errors).length > 0) {
+      // Set field errors
+      setFieldErrors(errors)
+      
+      // Find first invalid field and scroll to it
+      const firstErrorField = Object.keys(errors)[0]
+      const firstErrorElement = document.getElementById(firstErrorField) || 
+                                document.querySelector(`[name="${firstErrorField}"]`) ||
+                                document.querySelector(`[data-field="${firstErrorField}"]`)
+      
+      if (firstErrorField === 'background') {
+        // Scroll to background section
+        const backgroundSection = document.querySelector('.form-section:nth-of-type(2)')
+        if (backgroundSection) {
+          backgroundSection.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+      } else if (firstErrorField === 'otherBackground') {
+        // Scroll to other input
+        const otherInput = document.querySelector('.other-input')
+        if (otherInput) {
+          otherInput.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          otherInput.focus()
+        }
+      } else if (firstErrorElement) {
+        firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        setTimeout(() => {
+          firstErrorElement.focus()
+          if (firstErrorElement.tagName === 'SELECT') {
+            firstErrorElement.click()
+          }
+        }, 300)
+      }
+      
       return
     }
     
-    if (!formData.gpa || !formData.languageScore || formData.background.length === 0) {
-      alert('Lütfen tüm zorunlu alanları doldurun')
-      return
-    }
-
-    const gpa = parseFloat(formData.gpa)
-    if (isNaN(gpa) || gpa < 0 || gpa > 4.0) {
-      alert('GPA 0-4.0 arasında olmalıdır')
-      return
-    }
+    // Clear errors if validation passes
+    setFieldErrors({})
 
     // Final background array'i oluştur
     const finalBackground = formData.background
@@ -335,6 +431,38 @@ function InputForm({ onSubmit, loading, initialData = null }) {
       ...formData,
       background: finalBackground
     })
+  }
+  
+  // Clear field error when user starts typing/selecting
+  const handleFieldChange = (fieldName, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [fieldName]: value
+    }))
+    // Clear error for this field
+    if (fieldErrors[fieldName]) {
+      setFieldErrors(prev => {
+        const newErrors = { ...prev }
+        delete newErrors[fieldName]
+        return newErrors
+      })
+    }
+    // Also clear dependent field errors
+    if (fieldName === 'language') {
+      setFieldErrors(prev => {
+        const newErrors = { ...prev }
+        delete newErrors.languageTestType
+        delete newErrors.languageTestScore
+        return newErrors
+      })
+    }
+    if (fieldName === 'languageTestType') {
+      setFieldErrors(prev => {
+        const newErrors = { ...prev }
+        delete newErrors.languageTestScore
+        return newErrors
+      })
+    }
   }
 
   return (
@@ -387,7 +515,9 @@ function InputForm({ onSubmit, loading, initialData = null }) {
           </div>
 
           <div className="form-group">
-            <label htmlFor="gpa">Not Ortalaması</label>
+            <label htmlFor="gpa">
+              Not Ortalaması <span className="required-asterisk">*</span>
+            </label>
             <input
               type="number"
               id="gpa"
@@ -398,8 +528,10 @@ function InputForm({ onSubmit, loading, initialData = null }) {
               min={gradingSystems[formData.gradingSystem]?.min || 0}
               max={gradingSystems[formData.gradingSystem]?.max || 100}
               placeholder={gradingSystems[formData.gradingSystem]?.placeholder || 'Not ortalaması'}
+              className={fieldErrors.gpa ? 'error-input' : ''}
               required
             />
+            {fieldErrors.gpa && <span className="error-message">{fieldErrors.gpa}</span>}
             <small>{gradingSystems[formData.gradingSystem]?.label}</small>
           </div>
 
@@ -421,19 +553,29 @@ function InputForm({ onSubmit, loading, initialData = null }) {
           </div>
 
           <div className="form-group">
-            <label htmlFor="language">Yabancı Dil</label>
+            <label htmlFor="language">
+              Yabancı Dil <span className="required-asterisk">*</span>
+            </label>
             <select
               id="language"
               name="language"
               value={formData.language}
               onChange={(e) => {
+                handleFieldChange('language', e.target.value)
                 setFormData(prev => ({
                   ...prev,
-                  language: e.target.value,
                   languageTestType: '', // Dil değişince sınavı sıfırla
                   languageTestScore: '' // Skoru da sıfırla
                 }))
+                // Clear related field errors
+                setFieldErrors(prev => {
+                  const newErrors = { ...prev }
+                  delete newErrors.languageTestType
+                  delete newErrors.languageTestScore
+                  return newErrors
+                })
               }}
+              className={fieldErrors.language ? 'error-input' : ''}
               required
             >
               <option value="">Seçiniz</option>
@@ -441,25 +583,33 @@ function InputForm({ onSubmit, loading, initialData = null }) {
                 <option key={lang.value} value={lang.value}>{lang.label}</option>
               ))}
             </select>
+            {fieldErrors.language && <span className="error-message">{fieldErrors.language}</span>}
             <small>Başvuru yapacağınız programın gerektirdiği dil</small>
           </div>
 
           {formData.language && (
             <div className="form-group">
               <label htmlFor="languageTestType">
-                {languages.find(l => l.value === formData.language)?.label} Dil Sınavı
+                {languages.find(l => l.value === formData.language)?.label} Dil Sınavı <span className="required-asterisk">*</span>
               </label>
               <select
                 id="languageTestType"
                 name="languageTestType"
                 value={formData.languageTestType}
                 onChange={(e) => {
+                  handleFieldChange('languageTestType', e.target.value)
                   setFormData(prev => ({
                     ...prev,
-                    languageTestType: e.target.value,
                     languageTestScore: '' // Sınav değişince skoru sıfırla
                   }))
+                  // Clear score error when test type changes
+                  setFieldErrors(prev => {
+                    const newErrors = { ...prev }
+                    delete newErrors.languageTestScore
+                    return newErrors
+                  })
                 }}
+                className={fieldErrors.languageTestType ? 'error-input' : ''}
                 required
               >
                 <option value="">Seçiniz</option>
@@ -471,6 +621,7 @@ function InputForm({ onSubmit, loading, initialData = null }) {
                   ))
                 })()}
               </select>
+              {fieldErrors.languageTestType && <span className="error-message">{fieldErrors.languageTestType}</span>}
               <small>
                 {formData.country === 'turkey' && formData.language === 'english' 
                   ? 'Türkiye\'de en çok kabul gören İngilizce sınavları'
@@ -487,7 +638,7 @@ function InputForm({ onSubmit, loading, initialData = null }) {
             return selectedTest ? (
               <div className="form-group">
                 <label htmlFor="languageTestScore">
-                  {selectedTest.label} Skoru
+                  {selectedTest.label} Skoru <span className="required-asterisk">*</span>
                 </label>
                 <input
                   type="number"
@@ -499,8 +650,10 @@ function InputForm({ onSubmit, loading, initialData = null }) {
                   min={selectedTest.min || 0}
                   max={selectedTest.max || 120}
                   placeholder={selectedTest.placeholder || 'Skor'}
+                  className={fieldErrors.languageTestScore ? 'error-input' : ''}
                   required
                 />
+                {fieldErrors.languageTestScore && <span className="error-message">{fieldErrors.languageTestScore}</span>}
                 <small>{selectedTest.description}</small>
               </div>
             ) : null
@@ -508,7 +661,12 @@ function InputForm({ onSubmit, loading, initialData = null }) {
         </div>
 
         <div className="form-section">
-          <h2>🎯 Background</h2>
+          <h2>🎯 Background <span className="required-asterisk">*</span></h2>
+          {fieldErrors.background && (
+            <div className="error-message" style={{ marginBottom: '15px', padding: '10px', background: '#fee', border: '1px solid #fcc', borderRadius: '6px' }}>
+              {fieldErrors.background}
+            </div>
+          )}
           
           {/* CV Upload (simüle edilmiş - gerçekte CV parse edilecek) */}
           <div className="cv-upload-section" style={{ marginBottom: '20px', padding: '15px', background: '#f5f5f5', borderRadius: '8px' }}>
@@ -600,10 +758,11 @@ function InputForm({ onSubmit, loading, initialData = null }) {
             <div className="other-input-wrapper" style={{ marginTop: '15px' }}>
               <input
                 type="text"
+                data-field="otherBackground"
                 value={formData.otherBackground}
                 onChange={handleOtherInputChange}
                 placeholder="Enter your field (e.g., architecture, psychology)"
-                className="other-input"
+                className={`other-input ${fieldErrors.otherBackground ? 'error-input' : ''}`}
                 disabled={formData.otherConfirmed}
               />
               <button
@@ -615,6 +774,10 @@ function InputForm({ onSubmit, loading, initialData = null }) {
                 {formData.otherConfirmed ? '✓' : '✓'}
               </button>
             </div>
+          )}
+          
+          {fieldErrors.otherBackground && (
+            <span className="error-message" style={{ display: 'block', marginTop: '8px' }}>{fieldErrors.otherBackground}</span>
           )}
           
           {formData.background.includes('other') && formData.otherConfirmed && (
