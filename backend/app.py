@@ -411,21 +411,21 @@ def calculate_match_score(user_data, university):
     """
     Advanced matching score calculation
     
-    Temel Puanlar (100 puan üzerinden):
-    - GPA: 30 puan
-    - Dil skoru: 20 puan
-    - Background: 15 puan
-    - Research experience: 10 puan
-    - Work experience: 8 puan
-    - Publications: 5 puan
-    - Recommendation letters: 5 puan
-    - University ranking: 4 puan
-    - GRE/GMAT: 3 puan
+    Base Scores (100 points total):
+    - GPA: 30 points
+    - Language score: 20 points
+    - Background: 15 points
+    - Research experience: 10 points
+    - Work experience: 8 points
+    - Publications: 5 points
+    - Recommendation letters: 5 points
+    - University ranking: 4 points
+    - GRE/GMAT: 3 points
     
-    Ek Puanlar (bonus):
-    - Proje deneyimi
-    - Yarışma başarıları
-    - Yüksek lisans derecesi
+    Bonus Points:
+    - Project experience
+    - Competition achievements
+    - Master's degree
     """
     score = 0.0
     max_score = 100.0
@@ -438,13 +438,13 @@ def calculate_match_score(user_data, university):
     # Minimum GPA kontrolü
     min_gpa_req = calculate_minimum_gpa_requirement(user_data)
     
-    # 10+ yıl iş deneyimi varsa minimum GPA şartı yok
+    # If 10+ years work experience, minimum GPA requirement is waived
     work_exp = user_data.get('work_experience', 0)
     if work_exp < 10 and gpa_4_0 < min_gpa_req:
-        # Minimum GPA'nin altındaysa çok düşük puan
-        return 20.0  # Çok düşük uyum
+        # Below minimum GPA = very low score
+        return 20.0  # Very low match
     
-    # 1. GPA değerlendirmesi (30 puan) - 4.0 sisteminde
+    # 1. GPA evaluation (30 points) - on 4.0 scale
     if gpa_4_0 >= university['min_gpa']:
         gpa_score = min(30, (gpa_4_0 / 4.0) * 30)
         score += gpa_score
@@ -465,14 +465,14 @@ def calculate_match_score(user_data, university):
     language_test_score = user_data.get('language_test_score')
     
     if language_test_type and language_test_score:
-        # Sınav tipine göre normalize edilmiş skor (0-100 arası)
+        # Normalized score based on test type (0-100 scale)
         normalized_score = normalize_language_score(language_test_type, language_test_score)
         
-        if normalized_score >= 90:  # Çok yüksek seviye
+        if normalized_score >= 90:  # Very high level
             score += 20
         elif normalized_score >= 80:  # High level
             score += 18
-        elif normalized_score >= 70:  # İyi seviye
+        elif normalized_score >= 70:  # Good level
             score += 15
         elif normalized_score >= 60:  # Orta seviye
             score += 10
@@ -984,10 +984,10 @@ def match_universities():
             university_copy['match_score'] = match_score
             matched_universities.append(university_copy)
         
-        # Skora göre sırala (yüksekten düşüğe)
+        # Sort by score (highest to lowest)
         matched_universities.sort(key=lambda x: x['match_score'], reverse=True)
         
-        # Yüksek eşleşme (70+), orta (50-70), düşük (30-50), çok düşük (<30)
+        # High match (70+), medium (50-70), low (30-50), very low (<30)
         high_match = [u for u in matched_universities if u['match_score'] >= 70]
         medium_match = [u for u in matched_universities if 50 <= u['match_score'] < 70]
         low_match = [u for u in matched_universities if 30 <= u['match_score'] < 50]
@@ -1017,13 +1017,13 @@ if __name__ == '__main__':
     # Güvenlik: Development'ta sadece localhost, production'da 0.0.0.0
     # Production'da Railway/Render otomatik olarak PORT env variable set eder
     if os.environ.get('FLASK_ENV') == 'production' or os.environ.get('PORT'):
-        # Production: Tüm interface'lerden erişilebilir (Railway/Render için gerekli)
+        # Production: Accessible from all interfaces (required for Railway/Render)
         host = '0.0.0.0'
     else:
-        # Development: Sadece localhost (güvenli)
+        # Development: Localhost only (secure)
         host = '127.0.0.1'
     
-    # Geliştirme için debug mode açık (sadece development'ta)
+    # Debug mode enabled for development (only in development)
     debug_mode = os.environ.get('FLASK_ENV') != 'production'
     app.run(debug=debug_mode, host=host, port=port)
 
