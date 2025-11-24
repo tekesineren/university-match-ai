@@ -9,7 +9,7 @@
 
 Finding the right Master's program can be overwhelming. With hundreds of universities worldwide, each with different requirements and strengths, students often struggle to identify where they truly belong. **University Match AI** solves this by:
 
-- 🔍 **Smart Matching**: Advanced algorithm scores 50+ universities based on your unique profile
+- 🔍 **Smart Matching**: Advanced algorithm scores 20+ top universities based on your unique profile
 - 📄 **CV Analysis**: Automatically extracts and analyzes information from your CV
 - ✍️ **Application Support**: Helps evaluate motivation letters and application materials
 - 🎯 **Personalized Results**: Get categorized matches (High/Medium/Low) tailored to your goals
@@ -20,7 +20,7 @@ Finding the right Master's program can be overwhelming. With hundreds of univers
 - **Smart University Matching**: Advanced scoring algorithm based on GPA, language scores, background, experience, and more
 - **CV Parsing**: Automatically extracts information from PDF and DOCX CV files
 - **Motivation Letter Analysis**: Evaluates motivation letters against key criteria
-- **Real-time Scoring**: Instant match scores for 50+ universities worldwide
+- **Real-time Scoring**: Instant match scores for 20+ top universities worldwide
 - **Categorized Results**: Universities sorted into High/Medium/Low match categories
 - **API-First Architecture**: RESTful API that can be integrated with web, iOS, or any platform
 - **Premium Features**: Optional subscription model with rate limiting and advanced features
@@ -218,7 +218,7 @@ If you're planning to customize this tool for your own use case, we highly recom
 
 This is the first version of University Match AI. Future updates may include:
 
-- 📚 Expanded university database (500+ universities)
+- 📚 Expanded university database (50+ universities in next version)
 - 🔄 Enhanced matching algorithms with machine learning
 - 📊 Advanced analytics and insights
 - 🌍 Multi-language support

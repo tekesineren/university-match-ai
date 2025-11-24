@@ -1,6 +1,6 @@
 """
-Master Application Agent - Backend API
-Ana eşleştirme algoritması ve API endpoint'leri
+University Match AI - Backend API
+Main matching algorithm and API endpoints
 """
 
 from flask import Flask, request, jsonify
@@ -24,7 +24,7 @@ except ImportError:
 
 app = Flask(__name__)
 
-# CORS ayarları - Tüm originlere izin ver (Expo Go ve web için)
+# CORS settings - Allow all origins (for Expo Go and web apps)
 CORS(app, resources={
     r"/api/*": {
         "origins": "*",  # Expo Go ve tüm web uygulamaları için
@@ -33,7 +33,7 @@ CORS(app, resources={
     }
 })
 
-# Örnek okul veritabanı (ileride gerçek veritabanına dönüştürülecek)
+# University database (can be converted to a real database in the future)
 UNIVERSITIES = [
     {
         "id": 1,
@@ -324,7 +324,7 @@ def calculate_bonus_points(user_data):
     """
     bonus = 0.0
     
-    # 1. İş deneyimi ek puanı
+    # 1. Work experience bonus points
     work_exp = user_data.get('work_experience', 0)
     if 2 <= work_exp < 5:
         bonus += 0.2
@@ -333,7 +333,7 @@ def calculate_bonus_points(user_data):
     elif work_exp >= 10:
         bonus += 0.6  # 10+ yıl için ekstra
     
-    # 2. Yüksek lisans derecesi ek puanı
+    # 2. Master's degree bonus points
     has_masters = user_data.get('has_masters_degree', False)
     masters_ranking = user_data.get('masters_university_ranking', '')
     if has_masters:
@@ -345,7 +345,7 @@ def calculate_bonus_points(user_data):
     # 3. Lisans üniversitesi sıralaması (dolaylı etki - GPA'ya eklenir)
     # Bu kısım GPA hesaplamasında kullanılacak
     
-    # 4. Proje deneyimi ek puanı
+    # 4. Project experience bonus points
     project_exp = user_data.get('project_experience', 'none')
     if project_exp == 'national':
         bonus += 0.1
@@ -409,7 +409,7 @@ def calculate_minimum_gpa_requirement(user_data):
 
 def calculate_match_score(user_data, university):
     """
-    Gelişmiş eşleşme skoru hesaplama (Savunma Sanayisi kriterlerine göre uyarlanmış)
+    Advanced matching score calculation
     
     Temel Puanlar (100 puan üzerinden):
     - GPA: 30 puan
@@ -470,7 +470,7 @@ def calculate_match_score(user_data, university):
         
         if normalized_score >= 90:  # Çok yüksek seviye
             score += 20
-        elif normalized_score >= 80:  # Yüksek seviye
+        elif normalized_score >= 80:  # High level
             score += 18
         elif normalized_score >= 70:  # İyi seviye
             score += 15
@@ -494,7 +494,7 @@ def calculate_match_score(user_data, university):
         # Background gereksinimi yoksa tam puan
         score += 15
     
-    # 4. Araştırma deneyimi (10 puan)
+    # 4. Research experience (10 points)
     research_exp = user_data.get('research_experience', 0)
     if research_exp >= 2:
         score += 10
@@ -503,7 +503,7 @@ def calculate_match_score(user_data, university):
     elif research_exp >= 0.5:
         score += 4
     
-    # 5. İş deneyimi (8 puan)
+    # 5. Work experience (8 points)
     if work_exp >= 10:
         score += 8  # 10+ yıl = tam puan
     elif work_exp >= 5:
@@ -836,13 +836,12 @@ def parse_cv():
         if not text or len(text.strip()) < 50:
             return jsonify({
                 "success": False,
-                "error": "CV içeriği çıkarılamadı veya çok kısa. Lütfen geçerli bir CV yükleyin."
+                "error": "CV content could not be extracted or is too short. Please upload a valid CV."
             }), 400
         
         # CV içeriği validasyonu
         text_lower = text.lower()
-        cv_keywords = ['education', 'eğitim', 'experience', 'deneyim', 'skill', 'beceri', 
-                      'university', 'üniversite', 'gpa', 'not', 'work', 'iş']
+        cv_keywords = ['education', 'experience', 'skill', 'university', 'gpa', 'grade', 'work', 'employment']
         found_keywords = [kw for kw in cv_keywords if kw in text_lower]
         
         if len(found_keywords) < 3:
