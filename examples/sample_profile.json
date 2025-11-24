@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "gpa": 3.5,
+    "background": [
+      "robotics",
+      "engineering",
+      "software engineering"
+    ],
+    "country": "turkey",
+    "grading_system": "4.0",
+    "language": "english",
+    "work_experience": 1.5,
+    "research_experience": 0,
+    "publications": 0,
+    "recommendation_letters": 2,
+    "gre_score": null,
+    "gmat_score": null,
+    "has_masters_degree": false,
+    "masters_university_ranking": "",
+    "project_experience": "some",
+    "competition_achievements": "none",
+    "undergraduate_university_ranking": "",
+    "language_test_type": "toefl",
+    "language_test_score": 95
+  },
+  "target": "Autonomy + Technology focus in robotics",
+  "notes": "This is a sample profile for demonstration purposes"
+}
+

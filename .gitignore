@@ -1,0 +1,99 @@
+# Personal Information - Never commit personal data
+eren_*.py
+eren_*.json
+eren_*.md
+EREN_*.md
+cv_parse_eren.py
+*eren*.json
+*Eren*.py
+
+# Personal Application Files
+KTH_*.md
+KTH_*.txt
+enişten*.txt
+
+# Personal Documents
+*.pdf
+*transcript*.pdf
+*Transcript*.pdf
+*diploma*.pdf
+*Pass*.pdf
+*TOEFL*.pdf
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+.npm
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+secrets/
+config/secrets.json
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+*.bak
+*.cache
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Build outputs
+build/
+dist/
+*.egg-info/
+
+# Deployment
+.railway/
+railway.json
