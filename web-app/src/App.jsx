@@ -5,6 +5,7 @@ import CVUpload from './components/CVUpload'
 import CoreMetrics from './components/CoreMetrics'
 import Pricing from './components/Pricing'
 import Success from './components/Success'
+import UpdateNotification from './components/UpdateNotification'
 import './App.css'
 
 function App() {
@@ -23,6 +24,30 @@ function App() {
     if (params.get('session_id')) {
       setShowSuccess(true)
     }
+  }, [])
+
+  // Check for scheduled updates periodically
+  useEffect(() => {
+    const checkScheduledUpdate = () => {
+      const scheduledUpdate = localStorage.getItem('scheduled_update')
+      if (scheduledUpdate) {
+        const scheduledDate = new Date(scheduledUpdate)
+        const now = new Date()
+        
+        if (scheduledDate <= now) {
+          // Scheduled time has arrived, clear it so UpdateNotification can show
+          localStorage.removeItem('scheduled_update')
+        }
+      }
+    }
+
+    // Check immediately
+    checkScheduledUpdate()
+
+    // Check every minute for scheduled updates
+    const interval = setInterval(checkScheduledUpdate, 60 * 1000)
+
+    return () => clearInterval(interval)
   }, [])
 
   const handleSubmit = async (formData) => {
@@ -252,6 +277,15 @@ function App() {
 
   return (
     <div className="App">
+      <UpdateNotification 
+        onUpdate={() => {
+          console.log('Update triggered')
+        }}
+        onSchedule={(scheduleData) => {
+          console.log('Update scheduled:', scheduleData)
+        }}
+      />
+
       {showPricing && (
         <Pricing onClose={() => setShowPricing(false)} />
       )}
