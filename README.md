@@ -85,7 +85,7 @@ Open `http://localhost:5173` in your browser to start using the application!
 
 ### 🆘 Having Issues?
 
-See [BASLANGIC_REHBERI.md](BASLANGIC_REHBERI.md) for detailed step-by-step instructions in Turkish, or check the troubleshooting section below.
+See [GETTING_STARTED.md](GETTING_STARTED.md) for detailed step-by-step instructions, or check the troubleshooting section below.
 
 ## 📡 API Endpoints
 
