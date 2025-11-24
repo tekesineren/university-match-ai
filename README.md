@@ -46,11 +46,18 @@ university-match-ai/
 
 ### Prerequisites
 
-- Python 3.8+
-- Node.js 16+ (for web app)
-- pip
+- **Python 3.8+** - [Download here](https://www.python.org/downloads/) (check "Add Python to PATH" during installation)
+- **Node.js 16+** - [Download here](https://nodejs.org/) (LTS version recommended)
+- **pip** - Comes with Python
 
-### Backend Setup
+### Step 1: Clone the Repository
+
+```bash
+git clone https://github.com/tekesineren/university-match-ai.git
+cd university-match-ai
+```
+
+### Step 2: Setup Backend (Required)
 
 ```bash
 cd backend
@@ -58,17 +65,27 @@ pip install -r requirements.txt
 python app.py
 ```
 
-The API will run on `http://localhost:5000`
+✅ The API will run on `http://localhost:5000`
 
-### Web App Setup
+**Keep this terminal open!** Backend needs to stay running.
+
+### Step 3: Setup Web App (Open a New Terminal)
+
+In a **new terminal window**:
 
 ```bash
-cd web-app
+cd university-match-ai/web-app
 npm install
 npm run dev
 ```
 
-The web app will run on `http://localhost:5173`
+✅ The web app will run on `http://localhost:5173`
+
+Open `http://localhost:5173` in your browser to start using the application!
+
+### 🆘 Having Issues?
+
+See [BASLANGIC_REHBERI.md](BASLANGIC_REHBERI.md) for detailed step-by-step instructions in Turkish, or check the troubleshooting section below.
 
 ## 📡 API Endpoints
 
