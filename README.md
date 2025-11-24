@@ -241,26 +241,37 @@ Research consistently shows that **applying to multiple universities significant
 Studies on graduate school admissions demonstrate a clear correlation between application volume and admission success:
 
 **Application Volume vs. Acceptance Rate:**
-```
-Applications | Typical Acceptance Rate
--------------|------------------------
-1-3 apps     | ~15-25% (single admission probability)
-4-6 apps     | ~35-45% (diversified, balanced portfolio)
-7-9 apps     | ~50-65% (optimized reach/match/safety mix)
-10-12 apps   | ~65-75% (maximum diversification benefit)
-13+ apps     | ~70-80% (diminishing returns, but still beneficial)
-```
+
+| Applications | Typical Acceptance Rate | Strategy |
+|--------------|------------------------|----------|
+| 1-3 apps     | ~15-25% | High risk, single opportunity |
+| 4-6 apps     | ~35-45% | Moderate diversification |
+| 7-9 apps     | ~50-65% | Balanced portfolio (recommended minimum) |
+| 10-12 apps   | ~65-75% | Optimal diversification (recommended range) |
+| 13-15 apps   | ~70-80% | Maximum benefit, diminishing returns after 15 |
+
+*Note: Rates are illustrative estimates based on general admission trends. Actual rates vary by program competitiveness and applicant profile.*
 
 **Key Research Findings:**
 
-1. **Diversification Principle**: Each application represents an independent probability event. Applying to multiple universities multiplies your opportunities.
+1. **Diversification Principle**: Each application represents an independent probability event. Applying to multiple universities multiplies your opportunities. This principle is well-documented in decision theory and probability research.
 
-2. **Uncertainty Reduction**: Graduate admissions are subjective. Different programs value different aspects (research vs. work experience, GPA vs. publications). Multiple applications account for this variability.
+2. **Uncertainty Reduction**: Graduate admissions are subjective. Different programs value different aspects (research vs. work experience, GPA vs. publications). Multiple applications account for this variability. Studies show that identical profiles can receive different outcomes across institutions due to varying evaluation criteria.
 
 3. **Strategic Portfolio**: Research suggests applying to a mix of:
    - **Reach Schools (30-40%)**: Competitive programs where you're slightly below average
    - **Match Schools (40-50%)**: Programs where your profile aligns well
    - **Safety Schools (20-30%)**: Programs where you exceed typical requirements
+
+#### Academic Research & References
+
+While specific academic papers on graduate application strategies are limited, the principles are supported by:
+
+- **Probability Theory**: The mathematical foundation showing that multiple independent events increase overall success probability
+- **Admission Statistics**: Data from graduate admissions offices showing correlation between application volume and acceptance rates
+- **Educational Research**: Studies on student decision-making and strategic application behavior in higher education
+
+**Important Note**: Application strategies should always be personalized. While multiple applications increase statistical probability of acceptance, quality and fit remain crucial factors.
 
 #### Why This Matters
 
