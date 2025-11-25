@@ -321,3 +321,16 @@ University Match AI helps you build your application portfolio by:
 ---
 
 **Note**: This tool is for informational purposes only. Always verify requirements directly with universities. Results are based on algorithmic matching and should be used as a starting point for your research. Admission decisions are made by universities and are subject to their individual policies and evaluation criteria.
+
+---
+
+## 🆘 Troubleshooting
+
+If you encounter issues, especially with CV upload (403 errors), please check the [TROUBLESHOOTING.md](TROUBLESHOOTING.md) guide for detailed solutions.
+
+Common issues:
+- **403 Error**: Backend not running or CORS configuration issue
+- **CV Upload Failed**: Check backend is running on port 5000
+- **Rate Limit**: Free tier has limits (5 requests/day, 1 CV analysis/month)
+
+For detailed troubleshooting steps, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
