@@ -2,6 +2,22 @@ import { useState, useRef } from 'react'
 import { validateCVFile, extractTextFromFile, validateCVContent } from '../utils/cvParser'
 import './CVUpload.css'
 
+// Helper function for status error messages
+function getStatusErrorMessage(status) {
+  switch (status) {
+    case 403:
+      return 'Erişim reddedildi. Backend çalışıyor mu ve CORS ayarları doğru mu?'
+    case 404:
+      return 'API endpoint bulunamadı. Backend doğru portta çalışıyor mu?'
+    case 429:
+      return 'Rate limit aşıldı. Biraz bekleyin veya users.json dosyasını sıfırlayın.'
+    case 500:
+      return 'Backend hatası. Backend loglarını kontrol edin.'
+    default:
+      return 'Bilinmeyen hata. Backend çalışıyor mu?'
+  }
+}
+
 function CVUpload({ onCVUpload, onManualEntry }) {
   const [isDragging, setIsDragging] = useState(false)
   const [uploadedFile, setUploadedFile] = useState(null)
@@ -86,9 +102,37 @@ function CVUpload({ onCVUpload, onManualEntry }) {
       console.log('📥 Response status:', response.status, response.statusText)
       
       if (!response.ok) {
-        const errorText = await response.text()
-        console.error('❌ Response error:', errorText)
-        throw new Error(`CV analiz edilemedi (${response.status}). Backend çalışıyor mu?`)
+        let errorMessage = `CV analiz edilemedi (${response.status}). `
+        
+        try {
+          const errorData = await response.json()
+          if (errorData.error) {
+            errorMessage += errorData.error
+          } else {
+            errorMessage += getStatusErrorMessage(response.status)
+          }
+          
+          // Rate limit hatası için özel mesaj
+          if (response.status === 429 || errorData.rate_limit_exceeded) {
+            errorMessage += '\n\n💡 Çözüm: Backend klasöründe users.json dosyasını silerek limitleri sıfırlayabilirsiniz.'
+          }
+          
+          // 403 hatası için detaylı açıklama
+          if (response.status === 403) {
+            errorMessage += '\n\n🔧 Olası Çözümler:\n'
+            errorMessage += '1. Backend çalışıyor mu? (http://localhost:5000/api/health kontrol edin)\n'
+            errorMessage += '2. CORS ayarları doğru mu? Backend\'i yeniden başlatmayı deneyin\n'
+            errorMessage += '3. Rate limit aşıldı mı? users.json dosyasını silin'
+          }
+        } catch (e) {
+          const errorText = await response.text()
+          errorMessage += getStatusErrorMessage(response.status)
+          if (errorText) {
+            console.error('❌ Response error:', errorText)
+          }
+        }
+        
+        throw new Error(errorMessage)
       }
       
       const data = await response.json()
@@ -129,10 +173,17 @@ function CVUpload({ onCVUpload, onManualEntry }) {
       let errorMessage = err.message || 'CV analiz edilirken bir hata oluştu.'
       
       if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
-        errorMessage = 'Backend\'e bağlanılamadı. Backend çalışıyor mu? (http://localhost:5000)'
+        errorMessage = `🔴 Backend'e bağlanılamadı!
+
+Çözüm adımları:
+1. Backend çalışıyor mu? Terminal'de 'cd backend && python app.py' çalıştırın
+2. http://localhost:5000/api/health adresini tarayıcıda açın
+3. Backend'in 5000 portunda çalıştığını doğrulayın
+
+Lütfen manuel giriş yapın veya backend'i başlattıktan sonra tekrar deneyin.`
       }
       
-      setError(errorMessage + ' Lütfen manuel giriş yapın veya tekrar deneyin.')
+      setError(errorMessage)
       setIsProcessing(false)
       // Dosyayı silme, kullanıcı tekrar deneyebilir
     }
