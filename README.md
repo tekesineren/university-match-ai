@@ -1,77 +1,177 @@
 # University Match AI 🎓✨
 
-> **Version 1.0** - Initial Release  
-> Built collaboratively with [Cursor AI](https://cursor.sh) - an incredible AI coding assistant that made this project possible.
+> **AI-Powered University Matching System** for Master's Degree Applications
 
-**AI-powered university matching system** for Master's degree applications. This intelligent platform helps prospective students find their perfect-fit universities based on academic profile, experience, and career goals.
+**Version 1.3** - Portfolio Modal & Enhanced LinkedIn Sharing  
+Built collaboratively with [Cursor AI](https://cursor.sh)
 
-## 🌟 Why University Match AI?
+---
 
-Finding the right Master's program can be overwhelming. With hundreds of universities worldwide, each with different requirements and strengths, students often struggle to identify where they truly belong. **University Match AI** solves this by:
+## 📋 Table of Contents
 
-- 🔍 **Smart Matching**: Advanced algorithm scores 20+ top universities based on your unique profile
-- 📄 **CV Analysis**: Automatically extracts and analyzes information from your CV
-- ✍️ **Application Support**: Helps evaluate motivation letters and application materials
-- 🎯 **Personalized Results**: Get categorized matches (High/Medium/Low) tailored to your goals
-- 🚀 **API-First**: Integrate with any platform - web, mobile, or custom applications
+1. [Introduction](#-introduction)
+2. [Technology Stack](#-technology-stack)
+3. [Project Structure](#-project-structure)
+4. [Quick Start](#-quick-start)
+5. [Detailed Setup](#-detailed-setup-guide)
+6. [API Documentation](#-api-documentation)
+7. [Platform-Specific Notes](#-platform-specific-notes)
+8. [Troubleshooting & FAQ](#-troubleshooting--faq)
+9. [Features](#-features)
 
-## ✨ Key Features
+---
 
-- **Smart University Matching**: Advanced scoring algorithm based on GPA, language scores, background, experience, and more
-- **CV Parsing**: Automatically extracts information from PDF and DOCX CV files
-- **Motivation Letter Analysis**: Evaluates motivation letters against key criteria
-- **Real-time Scoring**: Instant match scores for 20+ top universities worldwide
-- **Categorized Results**: Universities sorted into High/Medium/Low match categories
-- **API-First Architecture**: RESTful API that can be integrated with web, iOS, or any platform
-- **Premium Features**: Optional subscription model with rate limiting and advanced features
+## 🎯 Introduction
 
-## 🏗️ Architecture
+**University Match AI** helps prospective Master's students find their perfect-fit universities through intelligent matching algorithms. The platform analyzes academic profiles, CVs, and motivation letters to provide personalized university recommendations.
+
+### What This Application Does
+
+- 🔍 **Smart Matching**: Scores 20+ top universities based on GPA, language scores, background, and experience
+- 📄 **CV Analysis**: Automatically extracts and analyzes information from PDF and DOCX CV files
+- ✍️ **Application Support**: Evaluates motivation letters against key criteria
+- 🎯 **Categorized Results**: Universities sorted into High/Medium/Low match categories
+- 📱 **Multi-Platform**: Web app, iOS-ready, and API-first architecture
+
+### Why Use This Tool?
+
+Finding the right Master's program is overwhelming. With hundreds of universities worldwide, each with different requirements, students struggle to identify where they belong. University Match AI solves this by providing:
+
+- **Instant Matching**: Get personalized recommendations in seconds
+- **Objective Scoring**: Algorithm-based evaluation removes bias
+- **Comprehensive Database**: 20+ top universities with detailed requirements
+- **Application Portfolio**: Export results as PDF for your application portfolio
+
+---
+
+## 🛠️ Technology Stack
+
+### Backend (Python)
+- **Flask 3.0.0**: Web framework for REST API
+- **Flask-CORS 4.0.0**: Cross-origin resource sharing
+- **PyPDF2 3.0.1**: PDF parsing for CV extraction
+- **python-docx 1.1.0**: DOCX parsing for CV extraction
+- **pandas 2.1.3**: Data processing and analysis
+- **numpy 1.26.2**: Numerical computations
+- **Stripe 7.0.0**: Payment processing (premium features)
+
+### Frontend (React)
+- **React 18.2.0**: UI library
+- **Vite 5.0.8**: Build tool and development server
+- **Axios 1.6.2**: HTTP client for API communication
+
+### Mobile & Development
+- **Capacitor 6.0.0**: Web-to-native bridge for iOS/Android apps
+- **Node.js 16+**: Runtime for frontend development
+
+---
+
+## 📁 Project Structure
+
+Understanding the project structure helps you navigate and modify the codebase:
 
 ```
 university-match-ai/
-├── backend/           # Python Flask API
-│   ├── app.py        # Main API server & matching algorithm
-│   ├── premium.py    # Premium features & rate limiting
-│   ├── stripe_integration.py  # Payment processing
-│   └── requirements.txt
-├── web-app/          # React web interface
-│   ├── src/          # React components
-│   └── public/       # Static assets
-├── ios-app/          # SwiftUI iOS app
-├── ios-app-expo/     # React Native (Expo) alternative
-└── examples/         # Sample data & usage examples
+│
+├── backend/                          # Python Flask Backend (API Server)
+│   ├── app.py                       # ⭐ Main API server & matching algorithm
+│   ├── premium.py                   # Premium features & rate limiting
+│   ├── stripe_integration.py        # Payment processing integration
+│   ├── email_service.py             # Email service for feedback
+│   ├── requirements.txt             # Python dependencies (install with pip)
+│   ├── CHECK_BACKEND.py             # Backend setup verification script
+│   └── users.json                   # User data (auto-generated)
+│
+├── web-app/                         # React Frontend (Web Interface)
+│   ├── src/                         # Source code
+│   │   ├── components/              # React components (UI elements)
+│   │   │   ├── InputForm.jsx       # User input form
+│   │   │   ├── ResultsView.jsx     # Results display
+│   │   │   ├── CVUpload.jsx        # CV upload component
+│   │   │   └── ...                 # Other components
+│   │   ├── utils/                  # Utility functions
+│   │   │   ├── cvParser.js         # CV parsing utilities
+│   │   │   └── i18n.js             # Internationalization
+│   │   ├── App.jsx                 # ⭐ Main application component
+│   │   └── main.jsx                # Entry point
+│   ├── public/                     # Static files (images, icons, HTML)
+│   ├── package.json                # Node.js dependencies (install with npm)
+│   ├── vite.config.js              # ⭐ Vite configuration (ports, proxy)
+│   ├── CHECK_SETUP.js              # Frontend setup verification script
+│   └── capacitor.config.json       # Mobile app configuration
+│
+├── ios-app/                        # Swift iOS App (Optional)
+│   └── *.swift files               # SwiftUI components
+│
+├── examples/                       # Sample data & examples
+│   └── sample_profile.json         # Example user profile
+│
+├── README.md                       # This file! 📖
+├── SETUP_GUIDE.md                  # ⭐ Complete setup guide (Windows & macOS)
+├── HATA_COZUM_REHBERI.md          # Error resolution guide (Turkish)
+└── TROUBLESHOOTING.md             # General troubleshooting guide
 ```
+
+### Key Files Explained
+
+| File | Purpose | When to Modify |
+|------|---------|----------------|
+| **`backend/app.py`** | Main backend server. Handles API requests, matching algorithm, CV parsing. **Must run for app to work.** | Add new API endpoints, modify matching algorithm |
+| **`backend/requirements.txt`** | Python dependencies list | Add new Python packages |
+| **`web-app/package.json`** | Node.js dependencies list | Add new npm packages |
+| **`web-app/src/App.jsx`** | Main React component - what users see | Modify UI structure, add features |
+| **`web-app/vite.config.js`** | Development server configuration (ports, proxy) | Change ports, modify API proxy settings |
+| **`web-app/src/components/InputForm.jsx`** | User input form component | Modify form fields, validation |
+| **`web-app/src/components/ResultsView.jsx`** | Results display component | Modify how results are shown |
+
+---
 
 ## 🚀 Quick Start
 
+For detailed setup instructions, see **[SETUP_GUIDE.md](SETUP_GUIDE.md)** (complete guide for Windows & macOS).
+
 ### Prerequisites
 
-- **Python 3.8+** - [Download here](https://www.python.org/downloads/) (check "Add Python to PATH" during installation)
-- **Node.js 16+** - [Download here](https://nodejs.org/) (LTS version recommended)
-- **pip** - Comes with Python
+Install these before starting:
 
-### Step 1: Clone the Repository
+- **Python 3.8+** - [Download](https://www.python.org/downloads/) (Check "Add Python to PATH" on Windows)
+- **Node.js 16+** - [Download](https://nodejs.org/) (Choose LTS version)
+- **Git** - [Download](https://git-scm.com/downloads) (usually pre-installed)
+
+**Verify installations**:
+```bash
+python --version   # or python3 on macOS
+node --version
+git --version
+```
+
+### Installation Steps
+
+#### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/tekesineren/university-match-ai.git
 cd university-match-ai
 ```
 
-### Step 2: Setup Backend (Required)
+**⚠️ Important**: Folder name is `university-match-ai` (NOT `university-match-ai-main`)
+
+#### 2. Setup Backend (Terminal 1)
 
 ```bash
 cd backend
-pip install -r requirements.txt
-python app.py
+pip install -r requirements.txt   # Windows
+pip3 install -r requirements.txt  # macOS (use pip3)
+python app.py                     # Windows
+python3 app.py                    # macOS (use python3)
 ```
 
-✅ The API will run on `http://localhost:5000`
+✅ Backend runs on `http://localhost:5000`  
+**Keep this terminal open!**
 
-**Keep this terminal open!** Backend needs to stay running.
+#### 3. Setup Frontend (Terminal 2 - NEW WINDOW)
 
-### Step 3: Setup Web App (Open a New Terminal)
-
-In a **new terminal window**:
+Open a **new terminal window**:
 
 ```bash
 cd university-match-ai/web-app
@@ -79,22 +179,71 @@ npm install
 npm run dev
 ```
 
-✅ The web app will run on `http://localhost:5173`
+✅ Frontend runs on `http://localhost:5173`
 
-Open `http://localhost:5173` in your browser to start using the application!
+#### 4. Open in Browser
 
-### 🆘 Having Issues?
+Open your browser and go to: **http://localhost:5173**
 
-See [GETTING_STARTED.md](GETTING_STARTED.md) for detailed step-by-step instructions, or check the troubleshooting section below.
+---
 
-## 📡 API Endpoints
+## 📖 Detailed Setup Guide
+
+For comprehensive setup instructions with troubleshooting, see:
+
+- **[SETUP_GUIDE.md](SETUP_GUIDE.md)** - Complete step-by-step guide (Windows & macOS)
+  - Prerequisites with download links
+  - Detailed installation steps
+  - Platform-specific notes
+  - Common errors and solutions
+  - Verification checklist
+
+- **[GETTING_STARTED.md](GETTING_STARTED.md)** - Quick start guide for beginners
+
+---
+
+## 📡 API Documentation
+
+The backend provides a REST API with the following endpoints:
+
+### Root Endpoint
+
+**GET /** - API information
+```bash
+curl http://localhost:5000/
+```
+
+**Response**:
+```json
+{
+  "name": "University Match AI API",
+  "version": "1.0",
+  "status": "running",
+  "endpoints": {...}
+}
+```
+
+### Health Check
+
+**GET /api/health** - Check if API is running
+```bash
+curl http://localhost:5000/api/health
+```
+
+**Response**:
+```json
+{
+  "status": "ok",
+  "message": "API is running"
+}
+```
 
 ### Match Universities
 
-```bash
-POST /api/match
-Content-Type: application/json
+**POST /api/match** - Match universities based on profile
 
+**Request**:
+```json
 {
   "gpa": 3.5,
   "language_test_type": "toefl",
@@ -107,7 +256,7 @@ Content-Type: application/json
 }
 ```
 
-**Response:**
+**Response**:
 ```json
 {
   "success": true,
@@ -122,18 +271,222 @@ Content-Type: application/json
 
 ### Parse CV
 
-```bash
-POST /api/parse-cv
-Content-Type: multipart/form-data
+**POST /api/parse-cv** - Extract information from CV
 
-file: [CV PDF or DOCX]
+**Request**: `multipart/form-data` with `file` field (PDF or DOCX)
+
+**Response**:
+```json
+{
+  "success": true,
+  "data": {
+    "gpa": 3.8,
+    "work_experience": 2.0,
+    ...
+  }
+}
 ```
 
-### Get All Universities
+### Get Universities
 
-```bash
-GET /api/universities
+**GET /api/universities** - Get list of all universities
+
+**Response**:
+```json
+{
+  "universities": [...]
+}
 ```
+
+### Submit Feedback
+
+**POST /api/feedback** - Submit user feedback
+
+**Request**:
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "message": "Great app!"
+}
+```
+
+---
+
+## 🖥️ Platform-Specific Notes
+
+### Windows 10/11
+
+- **Terminal**: Use **PowerShell** (recommended) or Command Prompt
+- **Python**: Use `python` (not `python3`)
+- **Path Format**: `C:\Users\YourName\Documents\...`
+
+**Example**:
+```powershell
+cd C:\Users\YourName\Desktop
+git clone https://github.com/tekesineren/university-match-ai.git
+cd university-match-ai\backend
+python app.py
+```
+
+### macOS (All Versions)
+
+- **Terminal**: Use **Terminal.app** (built-in)
+- **Python**: Always use `python3` (not `python`)
+- **pip**: Always use `pip3` (not `pip`)
+- **Home Directory**: Use `~` (shortcut for `/Users/YourName`)
+
+**Example**:
+```bash
+cd ~/Desktop
+git clone https://github.com/tekesineren/university-match-ai.git
+cd university-match-ai/backend
+python3 app.py
+```
+
+**Permission Issues**: If you get permission errors with `pip3`, use:
+```bash
+pip3 install --user -r requirements.txt
+```
+
+---
+
+## 🆘 Troubleshooting & FAQ
+
+### Quick Fixes
+
+**Frontend Setup Check**:
+```bash
+cd web-app
+npm run check-setup
+```
+
+**Backend Setup Check**:
+```bash
+cd backend
+python CHECK_BACKEND.py   # Windows
+python3 CHECK_BACKEND.py  # macOS
+```
+
+**Fix Frontend Issues**:
+```bash
+cd web-app
+npm run fix-setup
+```
+
+### Common Errors
+
+#### ❌ "cd: no such file or directory: university-match-ai-main"
+
+**Problem**: Wrong folder name.
+
+**Solution**: The correct folder name is `university-match-ai` (without `-main`).
+```bash
+cd university-match-ai   # Correct
+# NOT: cd university-match-ai-main
+```
+
+**How to find the correct folder**:
+```bash
+# List current directory
+ls       # macOS
+dir      # Windows
+
+# Look for "university-match-ai" folder
+```
+
+---
+
+#### ❌ Backend Returns 404 on Root URL (`/`)
+
+**Problem**: Accessing `http://localhost:5000/` returns 404.
+
+**Solution**: This is now fixed! The backend has a root route that shows API information.
+
+If you still see 404:
+- Make sure backend is running: `python app.py` (or `python3`)
+- Check backend terminal for errors
+- Test health endpoint: `http://localhost:5000/api/health`
+
+---
+
+#### ❌ "Bad HTTP/0.9 request type" or SSL/TLS Error
+
+**Problem**: Frontend trying HTTPS, backend only supports HTTP.
+
+**Solution**:
+1. Always use `http://127.0.0.1:5173` (NOT `https://`)
+2. Verify `web-app/vite.config.js` has `secure: false` in proxy settings
+3. See [HATA_COZUM_REHBERI.md](HATA_COZUM_REHBERI.md) for detailed fix
+
+---
+
+#### ❌ "Port 5000 already in use" (Backend)
+
+**Problem**: Another application is using port 5000.
+
+**Solution (Windows)**:
+```powershell
+netstat -ano | findstr :5000
+taskkill /PID <PID> /F
+```
+
+**Solution (macOS)**:
+```bash
+kill -9 $(lsof -ti:5000)
+```
+
+---
+
+#### ❌ "python: command not found" (macOS)
+
+**Problem**: macOS uses `python3`, not `python`.
+
+**Solution**: Always use `python3` on macOS:
+```bash
+python3 app.py
+pip3 install -r requirements.txt
+```
+
+---
+
+#### ❌ Frontend Can't Connect to Backend
+
+**Checklist**:
+- [ ] Is backend running? (Check Terminal 1)
+- [ ] Is backend on `http://127.0.0.1:5000`?
+- [ ] Is frontend using `http://127.0.0.1:5173`? (NOT `https://`)
+- [ ] Test backend: `curl http://localhost:5000/api/health`
+
+---
+
+### More Help
+
+1. **Complete Setup Guide**: [SETUP_GUIDE.md](SETUP_GUIDE.md) - Comprehensive guide with all errors
+2. **Error Resolution**: [HATA_COZUM_REHBERI.md](HATA_COZUM_REHBERI.md) - Detailed error fixes (Turkish)
+3. **General Troubleshooting**: [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Common issues
+
+---
+
+## ✨ Features
+
+### Core Features
+
+- 🔍 **Smart University Matching**: Advanced scoring algorithm based on GPA, language scores, background, experience, and more
+- 📄 **CV Parsing**: Automatically extracts information from PDF and DOCX CV files
+- ✍️ **Motivation Letter Analysis**: Evaluates motivation letters against key criteria
+- 🎯 **Categorized Results**: Universities sorted into High/Medium/Low match categories
+- 📱 **Multi-Platform**: Web app, iOS-ready (Capacitor), and API-first architecture
+
+### Additional Features
+
+- 🌐 **Multi-Language Support**: 5 main languages (EN, TR, ES, DE, FR) with auto-detection
+- 📊 **Application Portfolio**: Export results as PDF with LinkedIn sharing
+- 💬 **Feedback System**: Submit feedback directly from the app
+- 📝 **Release Notes**: View version history and updates
+- ⚙️ **Settings**: Customize language and preferences
+
+---
 
 ## 📊 Matching Algorithm
 
@@ -150,6 +503,8 @@ The matching algorithm scores universities on a 0-110 scale using weighted crite
 - **GRE/GMAT (3 points)**: Standardized test scores
 - **Bonus Points (up to 10)**: Projects, competitions, etc.
 
+---
+
 ## 🎯 Use Cases
 
 1. **Prospective Students**: Find the best-fit universities for Master's applications
@@ -157,14 +512,16 @@ The matching algorithm scores universities on a 0-110 scale using weighted crite
 3. **Institutions**: Understand applicant matching criteria and improve outreach
 4. **Educational Platforms**: Integrate matching capabilities into existing services
 
+---
+
 ## 🛠️ Development
 
 ### Running Tests
 
 ```bash
 cd backend
-python test_api.py
-python test_cv_parsing.py
+python test_api.py        # Windows
+python3 test_api.py       # macOS
 ```
 
 ### Adding Universities
@@ -176,9 +533,13 @@ Edit `backend/app.py` and add to the `UNIVERSITIES` list. Each university entry 
 - Language score requirements
 - Required background fields
 
+---
+
 ## 📝 Examples
 
 See `examples/sample_profile.json` for a sample user profile and expected results.
+
+---
 
 ## 🤝 Contributing
 
@@ -190,9 +551,13 @@ Contributions are welcome! Please:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+---
+
 ## 📄 License
 
 MIT License - see [LICENSE](LICENSE) file for details.
+
+---
 
 ## 🙏 Acknowledgments
 
@@ -200,123 +565,40 @@ Built to help students navigate the complex world of graduate school application
 
 ### Built with [Cursor AI](https://cursor.sh) ✨
 
-This entire project was developed collaboratively with **Cursor AI** - an exceptional AI coding assistant that truly understands context and helps bring ideas to life. From the initial matching algorithm to CV parsing, motivation letter evaluation, and the complete API architecture, Cursor AI was an invaluable partner throughout the development process.
+This entire project was developed collaboratively with **Cursor AI** - an exceptional AI coding assistant that truly understands context and helps bring ideas to life.
 
-**Why Cursor AI is recommended:**
+---
 
-- 🧠 Deep codebase understanding and context awareness
-- 💡 Intelligent suggestions that match your coding style
-- 🔗 Seamless integration with existing codebases
-- 🚀 Perfect for complex projects like this one
-- 🎯 Helps maintain code quality and best practices
+## 📅 Version History
 
-If you're planning to customize this tool for your own use case, we highly recommend using [Cursor AI](https://cursor.sh). Consider upgrading to their premium tier for enhanced capabilities - it's worth it if you're building something significant.
-
-## 📅 Version & Roadmap
-
-**Current Version: 1.1** - Enhanced Form Validation & User Experience
+**Current Version: 1.3** - Portfolio Modal & Enhanced LinkedIn Sharing
 
 See [RELEASE_NOTES.md](RELEASE_NOTES.md) for detailed changelog.
 
-**Previous Version: 1.0** - Initial Release
-
-This is the first version of University Match AI. Future updates may include:
-
-- 📚 Expanded university database (50+ universities in next version)
-- 🔄 Enhanced matching algorithms with machine learning
-- 📊 Advanced analytics and insights
-- 🌍 Multi-language support
-- 📱 Native mobile apps
-- 🔐 Enhanced security and privacy features
-- 💼 Integration with application portals
-
-**Contributions Welcome!** If you'd like to see specific features or improvements, please open an issue or submit a pull request.
+**Previous Versions**:
+- **1.1** - Enhanced Form Validation & User Experience
+- **1.0** - Initial Release
 
 ---
 
 ## 📈 Application Strategy: Why Multiple Applications Matter
 
-### The Science Behind Multiple Applications
+Research consistently shows that **applying to multiple universities significantly increases your chances of admission**. Graduate school admissions are inherently uncertain, and each university evaluates candidates differently.
 
-Research consistently shows that **applying to multiple universities significantly increases your chances of admission**. Graduate school admissions are inherently uncertain, and each university evaluates candidates differently based on their unique criteria.
-
-#### Statistical Evidence & Research
-
-Studies on graduate school admissions demonstrate a clear correlation between application volume and admission success:
-
-**Application Volume vs. Acceptance Rate:**
-
-| Applications | Typical Acceptance Rate | Strategy |
-|--------------|------------------------|----------|
-| 1-3 apps     | ~15-25% | High risk, single opportunity |
-| 4-6 apps     | ~35-45% | Moderate diversification |
-| 7-9 apps     | ~50-65% | Balanced portfolio (recommended minimum) |
-| 10-12 apps   | ~65-75% | Optimal diversification (recommended range) |
-| 13-15 apps   | ~70-80% | Maximum benefit, diminishing returns after 15 |
-
-*Note: Rates are illustrative estimates based on general admission trends. Actual rates vary by program competitiveness and applicant profile.*
-
-**Key Research Findings:**
-
-1. **Diversification Principle**: Each application represents an independent probability event. Applying to multiple universities multiplies your opportunities. This principle is well-documented in decision theory and probability research.
-
-2. **Uncertainty Reduction**: Graduate admissions are subjective. Different programs value different aspects (research vs. work experience, GPA vs. publications). Multiple applications account for this variability. Studies show that identical profiles can receive different outcomes across institutions due to varying evaluation criteria.
-
-3. **Strategic Portfolio**: Research suggests applying to a mix of:
-   - **Reach Schools (30-40%)**: Competitive programs where you're slightly below average
-   - **Match Schools (40-50%)**: Programs where your profile aligns well
-   - **Safety Schools (20-30%)**: Programs where you exceed typical requirements
-
-#### Academic Research & References
-
-While specific academic papers on graduate application strategies are limited, the principles are supported by:
-
-- **Probability Theory**: The mathematical foundation showing that multiple independent events increase overall success probability
-- **Admission Statistics**: Data from graduate admissions offices showing correlation between application volume and acceptance rates
-- **Educational Research**: Studies on student decision-making and strategic application behavior in higher education
-
-**Important Note**: Application strategies should always be personalized. While multiple applications increase statistical probability of acceptance, quality and fit remain crucial factors.
-
-#### Why This Matters
-
-✅ **Maximize Opportunities**: Each additional application increases your chance of receiving at least one acceptance offer
-
-✅ **Risk Mitigation**: Even strong candidates can be rejected by competitive programs. Multiple applications protect against unexpected outcomes
-
-✅ **Better Decision Making**: Multiple acceptances allow you to compare offers, negotiate scholarships, and choose the best fit
-
-✅ **Reduced Uncertainty**: Admissions processes are unpredictable. Research shows that application outcomes can vary significantly for identical profiles at different institutions
-
-#### Recommended Approach
-
-For most prospective Master's students:
-
+**Recommended Approach**:
 - **Minimum**: 5-6 applications (balanced portfolio)
 - **Optimal**: 8-12 applications (well-distributed across match levels)
 - **Maximum**: 12-15 applications (diminishing returns after this point)
 
-**Important**: Quality matters more than quantity. Each application should be:
-- Tailored to the specific program
-- Highlighting relevant experiences
-- Demonstrating genuine interest
-- Meeting all requirements and deadlines
+**Important**: Quality matters more than quantity. Each application should be tailored to the specific program and demonstrate genuine interest.
 
-#### How This Tool Helps
+### How This Tool Helps
 
 University Match AI helps you build your application portfolio by:
-
 1. **Identifying Multiple Options**: Find 20+ universities matching your profile
 2. **Categorizing by Match Level**: Understand which are reach, match, or safety schools
 3. **Strategic Planning**: Build a balanced list across different match categories
 4. **Efficiency**: Quickly identify programs you might not have considered
-
-#### Legal & Privacy Considerations
-
-🔒 **Privacy Protection**: This tool processes academic information for matching purposes only. All data handling follows privacy best practices. Review university privacy policies when submitting applications.
-
-⚖️ **Legal Disclaimer**: This tool provides informational matching only. Always verify admission requirements directly with official university sources. Admission decisions are made solely by universities based on their individual criteria and are not guaranteed by this tool.
-
-📋 **Data Handling**: Your profile data is used only for matching calculations. No personal information is stored or shared without your explicit consent.
 
 ---
 
@@ -324,13 +606,4 @@ University Match AI helps you build your application portfolio by:
 
 ---
 
-## 🆘 Troubleshooting
-
-If you encounter issues, especially with CV upload (403 errors), please check the [TROUBLESHOOTING.md](TROUBLESHOOTING.md) guide for detailed solutions.
-
-Common issues:
-- **403 Error**: Backend not running or CORS configuration issue
-- **CV Upload Failed**: Check backend is running on port 5000
-- **Rate Limit**: Free tier has limits (5 requests/day, 1 CV analysis/month)
-
-For detailed troubleshooting steps, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
+**Last Updated**: November 2024

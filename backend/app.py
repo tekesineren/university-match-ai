@@ -1,6 +1,6 @@
 """
-University Match AI - Backend API
-Main matching algorithm and API endpoints
+Master Application Agent - Backend API
+Ana eşleştirme algoritması ve API endpoint'leri
 """
 
 from flask import Flask, request, jsonify
@@ -870,6 +870,90 @@ def parse_cv():
             "success": False,
             "error": f"CV analiz edilirken hata oluştu: {str(e)}"
         }), 500
+
+@app.route('/api/feedback', methods=['POST'])
+@rate_limit
+def submit_feedback():
+    """Kullanıcı geri bildirimini al ve email gönder"""
+    if request.method == 'OPTIONS':
+        return '', 200
+    
+    try:
+        data = request.json
+        name = data.get('name', 'Anonymous')
+        email = data.get('email', 'No email provided')
+        message = data.get('message', '')
+        feedback_type = data.get('type', 'general')
+        user_info = {
+            'language': data.get('language', 'Unknown'),
+            'url': data.get('url', 'Unknown'),
+            'userAgent': data.get('userAgent', 'Unknown')
+        }
+        
+        if not message or len(message.strip()) < 10:
+            return jsonify({
+                "success": False,
+                "error": "Message must be at least 10 characters"
+            }), 400
+        
+        # Import email service
+        try:
+            from email_service import send_feedback_email
+            email_sent = send_feedback_email(name, email, message, feedback_type, user_info)
+            
+            if email_sent:
+                return jsonify({
+                    "success": True,
+                    "message": "Feedback sent successfully"
+                })
+            else:
+                return jsonify({
+                    "success": False,
+                    "error": "Failed to send feedback email"
+                }), 500
+        except ImportError:
+            # Email service not available, just log
+            print(f"📧 Feedback received (email service not configured):")
+            print(f"Name: {name}")
+            print(f"Email: {email}")
+            print(f"Type: {feedback_type}")
+            print(f"Message: {message}")
+            
+            return jsonify({
+                "success": True,
+                "message": "Feedback received (logged)"
+            })
+            
+    except Exception as e:
+        print(f"❌ Feedback error: {e}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@app.route('/', methods=['GET'])
+def root():
+    """Root endpoint - API information"""
+    return jsonify({
+        "name": "University Match AI API",
+        "version": "1.3",
+        "status": "running",
+        "endpoints": {
+            "health": "GET /api/health",
+            "universities": "GET /api/universities",
+            "match": "POST /api/match",
+            "parse_cv": "POST /api/parse-cv",
+            "feedback": "POST /api/feedback",
+            "user_stats": "GET /api/user/stats",
+            "user_upgrade": "POST /api/user/upgrade",
+            "api_key_create": "POST /api/api-key/create",
+            "checkout_create": "POST /api/checkout/create",
+            "webhook_stripe": "POST /api/webhook/stripe"
+        },
+        "documentation": "See README.md and SETUP_GUIDE.md for detailed documentation",
+        "web_app": "Access the web interface at http://localhost:5173",
+        "github": "https://github.com/tekesineren/university-match-ai"
+    })
 
 @app.route('/api/health', methods=['GET'])
 def health_check():

@@ -5,19 +5,27 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "check-setup": "node CHECK_SETUP.js",
+    "fix-setup": "npm cache clean --force && rm -rf node_modules package-lock.json && npm install",
+    "ios:sync": "npx cap sync ios",
+    "ios:open": "npx cap open ios",
+    "ios:build": "npm run build && npx cap sync ios"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "axios": "^1.6.2",
-    "@capacitor/core": "^6.0.0",
+    "@capacitor/app": "^6.0.2",
     "@capacitor/cli": "^6.0.0",
-    "@capacitor/ios": "^6.0.0"
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/haptics": "^6.0.2",
+    "@capacitor/ios": "^6.0.0",
+    "@capacitor/splash-screen": "^6.0.3",
+    "@capacitor/status-bar": "^6.0.2",
+    "axios": "^1.6.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
     "vite": "^5.0.8"
   }
 }
-
