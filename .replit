@@ -33,6 +33,7 @@ outputType = "webview"
 localPort = 5000
 externalPort = 80
 
-[[ports]]
-localPort = 40349
-externalPort = 3000
+[deployment]
+deploymentTarget = "autoscale"
+run = ["bash", "-c", "cd backend && python app.py & cd web-app && npm run dev"]
+build = ["npm", "install", "--prefix", "web-app"]

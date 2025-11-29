@@ -1098,8 +1098,12 @@ if __name__ == '__main__':
     # Use port 5001 for backend (frontend uses 5000)
     port = int(os.environ.get('PORT', 5001))
     
-    # Backend runs on localhost for internal API calls
-    host = '127.0.0.1'
+    # In deployment (when PORT is set), bind to 0.0.0.0
+    # In development, bind to localhost only
+    if os.environ.get('PORT'):
+        host = '0.0.0.0'
+    else:
+        host = '127.0.0.1'
     
     # Debug mode enabled for development
     debug_mode = os.environ.get('FLASK_ENV') != 'production'
