@@ -1095,19 +1095,13 @@ def match_universities():
         }), 400
 
 if __name__ == '__main__':
-    # Railway ve Render.com için PORT environment variable kullan
-    port = int(os.environ.get('PORT', 5000))
+    # Use port 5001 for backend (frontend uses 5000)
+    port = int(os.environ.get('PORT', 5001))
     
-    # Güvenlik: Development'ta sadece localhost, production'da 0.0.0.0
-    # Production'da Railway/Render otomatik olarak PORT env variable set eder
-    if os.environ.get('FLASK_ENV') == 'production' or os.environ.get('PORT'):
-        # Production: Accessible from all interfaces (required for Railway/Render)
-        host = '0.0.0.0'
-    else:
-        # Development: Localhost only (secure)
-        host = '127.0.0.1'
+    # Backend runs on localhost for internal API calls
+    host = '127.0.0.1'
     
-    # Debug mode enabled for development (only in development)
+    # Debug mode enabled for development
     debug_mode = os.environ.get('FLASK_ENV') != 'production'
     app.run(debug=debug_mode, host=host, port=port)
 
