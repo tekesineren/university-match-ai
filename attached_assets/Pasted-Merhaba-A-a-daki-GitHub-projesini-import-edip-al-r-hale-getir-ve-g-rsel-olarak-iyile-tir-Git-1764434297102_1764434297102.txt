@@ -1,0 +1,53 @@
+Merhaba! Aşağıdaki GitHub projesini import edip, çalışır hale getir ve görsel olarak iyileştir:
+
+GitHub URL: https://github.com/tekesineren/university-match-ai
+
+🎯 YAPILACAKLAR:
+
+1. PROJE KURULUMU:
+   - GitHub'dan projeyi import et
+   - Backend için: backend/requirements.txt dosyasındaki paketleri yükle
+   - Frontend için: web-app/package.json dosyasındaki paketleri yükle
+
+2. BACKEND AYARLARI:
+   - backend/app.py dosyasını çalıştır
+   - Port 5000'de Flask server başlat
+   - CORS ayarlarını yapılandır (frontend ile backend iletişimi için)
+   - .replit dosyası oluştur, run komutu: "cd backend && pip install -r requirements.txt && python app.py"
+
+3. FRONTEND AYARLARI:
+   - web-app/vite.config.js dosyasını kontrol et
+   - API URL'ini Replit backend URL'ine otomatik bağla
+   - Frontend'i host 0.0.0.0 üzerinde çalıştır (Replit için gerekli)
+   - Ayrı bir deployment için frontend yapılandırması yap
+
+4. GÖRSEL İYİLEŞTİRMELER:
+   - Modern, profesyonel UI/UX tasarımı ekle
+   - Dark/Light mode ekle
+   - Loading animasyonları ekle
+   - Smooth geçiş efektleri ekle
+   - Mobil responsive tasarım yap
+   - Form tasarımını daha modern yap (step-by-step wizard)
+   - Success/error toast notifications ekle
+   - Ana sayfaya hero section ve modern landing page tasarımı ekle
+
+5. DEPLOYMENT AYARLARI:
+   - Replit'te canlı yayınlama (deployment) ayarları yap
+   - Environment variables (secrets) için yapılandırma ekle
+   - Production için optimize et
+
+6. OPSIYONEL İYİLEŞTİRMELER:
+   - Tailwind CSS veya Material UI ekle (daha modern görünüm için)
+   - Framer Motion ile animasyonlar ekle
+   - Dashboard görünümü ekle (istatistikler, grafikler)
+   - User profile sistemi ekle
+
+ÖNEMLİ NOTLAR:
+- Bu bir üniversite eşleştirme AI uygulamasıdır
+- Backend Python Flask kullanıyor
+- Frontend React + Vite kullanıyor
+- CV parsing, motivation letter analizi ve üniversite eşleştirme özellikleri var
+- Hem backend hem frontend'i aynı anda çalışır hale getir
+- Mobil-ready olmalı (iOS app için hazırlık)
+
+Lütfen adım adım ilerle ve her adımda bana bilgi ver. Hataları göster ve düzelt.
