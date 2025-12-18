@@ -9,6 +9,230 @@ import json
 import os
 import re
 import io
+
+# =============================================================================
+# SYNONYM MAPPING SYSTEM - Teknoloji ve Beceri Eşleştirme
+# =============================================================================
+# CV'lerde farklı yazılabilen teknolojileri standart forma getir
+# Örnek: "JS" -> "JavaScript", "Node" -> "Node.js"
+
+SKILL_SYNONYMS = {
+    # JavaScript Ecosystem
+    "javascript": ["javascript", "js", "ecmascript", "es6", "es2015", "es2020", "vanilla js"],
+    "typescript": ["typescript", "ts"],
+    "node.js": ["node.js", "nodejs", "node", "node js"],
+    "react": ["react", "reactjs", "react.js", "react js"],
+    "vue.js": ["vue.js", "vue", "vuejs", "vue js", "vue 3"],
+    "angular": ["angular", "angularjs", "angular.js", "angular 2+"],
+    "next.js": ["next.js", "nextjs", "next"],
+    "express.js": ["express.js", "expressjs", "express"],
+    
+    # Python Ecosystem
+    "python": ["python", "py", "python3", "python 3"],
+    "django": ["django", "django rest framework", "drf"],
+    "flask": ["flask", "flask api"],
+    "fastapi": ["fastapi", "fast api"],
+    "pandas": ["pandas", "pd"],
+    "numpy": ["numpy", "np"],
+    "tensorflow": ["tensorflow", "tf", "tensorflow 2"],
+    "pytorch": ["pytorch", "torch"],
+    "scikit-learn": ["scikit-learn", "sklearn", "scikit learn"],
+    
+    # Java Ecosystem
+    "java": ["java", "java 8", "java 11", "java 17", "jdk"],
+    "spring": ["spring", "spring boot", "springboot", "spring framework"],
+    "kotlin": ["kotlin", "kt"],
+    
+    # C/C++ Family
+    "c": ["c language", "c programming"],
+    "c++": ["c++", "cpp", "c plus plus"],
+    "c#": ["c#", "csharp", "c sharp", ".net c#"],
+    ".net": [".net", "dotnet", ".net core", ".net framework", "asp.net"],
+    
+    # Mobile Development
+    "react native": ["react native", "react-native", "rn"],
+    "flutter": ["flutter", "dart flutter"],
+    "swift": ["swift", "swiftui", "swift ui"],
+    "ios": ["ios", "ios development", "iphone development"],
+    "android": ["android", "android development", "android studio"],
+    
+    # Databases
+    "sql": ["sql", "structured query language"],
+    "mysql": ["mysql", "my sql"],
+    "postgresql": ["postgresql", "postgres", "psql", "pg"],
+    "mongodb": ["mongodb", "mongo", "mongo db"],
+    "redis": ["redis", "redis db"],
+    "firebase": ["firebase", "firestore", "firebase db"],
+    "supabase": ["supabase", "supabase db"],
+    
+    # Cloud & DevOps
+    "aws": ["aws", "amazon web services", "amazon aws"],
+    "azure": ["azure", "microsoft azure", "ms azure"],
+    "gcp": ["gcp", "google cloud", "google cloud platform"],
+    "docker": ["docker", "docker container", "containerization"],
+    "kubernetes": ["kubernetes", "k8s", "kube"],
+    "ci/cd": ["ci/cd", "cicd", "ci cd", "continuous integration", "continuous deployment"],
+    "git": ["git", "github", "gitlab", "bitbucket", "version control"],
+    
+    # AI/ML
+    "machine learning": ["machine learning", "ml", "makine öğrenmesi"],
+    "deep learning": ["deep learning", "dl", "derin öğrenme"],
+    "artificial intelligence": ["artificial intelligence", "ai", "yapay zeka"],
+    "nlp": ["nlp", "natural language processing", "doğal dil işleme"],
+    "computer vision": ["computer vision", "cv", "görüntü işleme", "image processing"],
+    "llm": ["llm", "large language model", "gpt", "chatgpt", "claude", "mistral"],
+    
+    # Data Engineering
+    "etl": ["etl", "extract transform load", "data pipeline"],
+    "spark": ["spark", "apache spark", "pyspark"],
+    "hadoop": ["hadoop", "apache hadoop", "hdfs"],
+    "kafka": ["kafka", "apache kafka"],
+    "airflow": ["airflow", "apache airflow"],
+    
+    # Frontend Tools
+    "html": ["html", "html5", "html 5"],
+    "css": ["css", "css3", "css 3"],
+    "sass": ["sass", "scss"],
+    "tailwind": ["tailwind", "tailwindcss", "tailwind css"],
+    "bootstrap": ["bootstrap", "bootstrap 5"],
+    
+    # Other Languages
+    "go": ["go", "golang", "go lang"],
+    "rust": ["rust", "rust lang"],
+    "ruby": ["ruby", "ruby on rails", "rails", "ror"],
+    "php": ["php", "laravel", "symfony"],
+    "scala": ["scala"],
+    "r": ["r", "r language", "r programming"],
+    
+    # Soft Skills (Türkçe dahil)
+    "problem solving": ["problem solving", "problem çözme", "analitik düşünme"],
+    "teamwork": ["teamwork", "team work", "takım çalışması", "ekip çalışması"],
+    "communication": ["communication", "iletişim", "communication skills"],
+    "leadership": ["leadership", "liderlik", "team lead", "takım liderliği"],
+    "agile": ["agile", "scrum", "kanban", "çevik metodoloji"],
+}
+
+def normalize_skill(skill_text):
+    """
+    Bir beceri metnini standart forma getirir.
+    
+    Örnek:
+        "JS" -> "javascript"
+        "Node" -> "node.js"
+        "React.js" -> "react"
+    """
+    if not skill_text:
+        return None
+    
+    skill_lower = skill_text.lower().strip()
+    
+    # Tüm synonym gruplarını kontrol et
+    for standard_name, synonyms in SKILL_SYNONYMS.items():
+        for synonym in synonyms:
+            if skill_lower == synonym.lower():
+                return standard_name
+            # Partial match için (kelime sınırlarıyla)
+            pattern = r'\b' + re.escape(synonym.lower()) + r'\b'
+            if re.search(pattern, skill_lower):
+                return standard_name
+    
+    # Eşleşme bulunamazsa orijinali döndür
+    return skill_lower
+
+def extract_skills_from_cv(text):
+    """
+    CV metninden becerileri çıkarır ve normalize eder.
+    
+    Returns:
+        dict: {
+            'raw_skills': [...],      # CV'de bulunan ham beceriler
+            'normalized_skills': [...], # Normalize edilmiş beceriler
+            'skill_categories': {...}  # Kategorilere göre gruplandırılmış
+        }
+    """
+    if not text:
+        return {'raw_skills': [], 'normalized_skills': [], 'skill_categories': {}}
+    
+    text_lower = text.lower()
+    found_skills = set()
+    raw_skills = set()
+    
+    # Tüm synonym gruplarını tara
+    for standard_name, synonyms in SKILL_SYNONYMS.items():
+        for synonym in synonyms:
+            # Kelime sınırlarıyla exact match
+            pattern = r'\b' + re.escape(synonym.lower()) + r'\b'
+            if re.search(pattern, text_lower):
+                raw_skills.add(synonym)
+                found_skills.add(standard_name)
+                break  # Bu grup için bir eşleşme yeterli
+    
+    # Kategorilere ayır
+    categories = {
+        'programming_languages': [],
+        'frameworks': [],
+        'databases': [],
+        'cloud_devops': [],
+        'ai_ml': [],
+        'soft_skills': [],
+        'other': []
+    }
+    
+    language_keywords = ['javascript', 'typescript', 'python', 'java', 'c++', 'c#', 'c', 'go', 'rust', 'ruby', 'php', 'scala', 'r', 'kotlin', 'swift']
+    framework_keywords = ['react', 'vue.js', 'angular', 'next.js', 'node.js', 'express.js', 'django', 'flask', 'fastapi', 'spring', '.net', 'react native', 'flutter']
+    database_keywords = ['sql', 'mysql', 'postgresql', 'mongodb', 'redis', 'firebase', 'supabase']
+    cloud_keywords = ['aws', 'azure', 'gcp', 'docker', 'kubernetes', 'ci/cd', 'git']
+    ai_keywords = ['machine learning', 'deep learning', 'artificial intelligence', 'nlp', 'computer vision', 'llm', 'tensorflow', 'pytorch', 'scikit-learn', 'pandas', 'numpy']
+    soft_keywords = ['problem solving', 'teamwork', 'communication', 'leadership', 'agile']
+    
+    for skill in found_skills:
+        if skill in language_keywords:
+            categories['programming_languages'].append(skill)
+        elif skill in framework_keywords:
+            categories['frameworks'].append(skill)
+        elif skill in database_keywords:
+            categories['databases'].append(skill)
+        elif skill in cloud_keywords:
+            categories['cloud_devops'].append(skill)
+        elif skill in ai_keywords:
+            categories['ai_ml'].append(skill)
+        elif skill in soft_keywords:
+            categories['soft_skills'].append(skill)
+        else:
+            categories['other'].append(skill)
+    
+    return {
+        'raw_skills': list(raw_skills),
+        'normalized_skills': list(found_skills),
+        'skill_categories': categories
+    }
+
+def get_skill_match_score(user_skills, required_skills):
+    """
+    Kullanıcı becerileri ile gereken beceriler arasındaki eşleşme skorunu hesaplar.
+    Synonym mapping kullanarak akıllı eşleştirme yapar.
+    
+    Returns:
+        float: 0-1 arası eşleşme skoru
+    """
+    if not required_skills:
+        return 1.0  # Gereksinim yoksa tam eşleşme
+    if not user_skills:
+        return 0.0  # Kullanıcı becerisi yoksa sıfır
+    
+    # Normalize et
+    normalized_user = set(normalize_skill(s) for s in user_skills if s)
+    normalized_required = set(normalize_skill(s) for s in required_skills if s)
+    
+    # None değerleri temizle
+    normalized_user.discard(None)
+    normalized_required.discard(None)
+    
+    if not normalized_required:
+        return 1.0
+    
+    matches = normalized_user & normalized_required
+    return len(matches) / len(normalized_required)
 from premium import rate_limit, get_user_id, get_user_stats, upgrade_user, create_api_key, require_tier
 from stripe_integration import create_checkout_session, handle_stripe_webhook
 try:
@@ -579,12 +803,25 @@ def extract_text_from_docx(file_content):
         return None
 
 def parse_cv_content(text):
-    """CV text'inden bilgileri çıkar"""
+    """
+    CV text'inden bilgileri çıkar.
+    
+    Synonym mapping kullanarak becerileri normalize eder:
+    - "JS" -> "javascript"
+    - "Node" -> "node.js"
+    - "React.js" -> "react"
+    """
     if not text:
         return {}
     
     text_lower = text.lower()
     extracted_data = {}
+    
+    # ===== SKILL EXTRACTION WITH SYNONYM MAPPING =====
+    skills_data = extract_skills_from_cv(text)
+    extracted_data['skills'] = skills_data['normalized_skills']
+    extracted_data['raw_skills'] = skills_data['raw_skills']
+    extracted_data['skill_categories'] = skills_data['skill_categories']
     
     # GPA extraction - daha kapsamlı pattern'ler
     gpa_patterns = [
@@ -936,14 +1173,22 @@ def root():
     """Root endpoint - API information"""
     return jsonify({
         "name": "University Match AI API",
-        "version": "1.3",
+        "version": "1.4",
         "status": "running",
+        "features": {
+            "skill_synonym_mapping": "JavaScript=JS=Node.js style normalization",
+            "cv_parsing": "PDF and DOCX support with smart extraction",
+            "university_matching": "Advanced scoring algorithm"
+        },
         "endpoints": {
             "health": "GET /api/health",
             "universities": "GET /api/universities",
             "match": "POST /api/match",
             "parse_cv": "POST /api/parse-cv",
             "feedback": "POST /api/feedback",
+            "skills_normalize": "POST /api/skills/normalize - Normalize skill names",
+            "skills_extract": "POST /api/skills/extract - Extract skills from text",
+            "skills_synonyms": "GET /api/skills/synonyms - Get all synonym mappings",
             "user_stats": "GET /api/user/stats",
             "user_upgrade": "POST /api/user/upgrade",
             "api_key_create": "POST /api/api-key/create",
@@ -959,6 +1204,133 @@ def root():
 def health_check():
     """API sağlık kontrolü"""
     return jsonify({"status": "ok", "message": "API is running"})
+
+@app.route('/api/skills/normalize', methods=['POST'])
+def normalize_skills_endpoint():
+    """
+    Beceri listesini normalize et - Synonym mapping kullanarak standart forma getir.
+    
+    Request body:
+    {
+        "skills": ["JS", "Node", "React.js", "Python3"]
+    }
+    
+    Response:
+    {
+        "success": true,
+        "original": ["JS", "Node", "React.js", "Python3"],
+        "normalized": ["javascript", "node.js", "react", "python"],
+        "mapping": {
+            "JS": "javascript",
+            "Node": "node.js",
+            "React.js": "react",
+            "Python3": "python"
+        }
+    }
+    """
+    try:
+        data = request.json
+        skills = data.get('skills', [])
+        
+        if not skills:
+            return jsonify({
+                "success": False,
+                "error": "skills listesi gerekli"
+            }), 400
+        
+        normalized = []
+        mapping = {}
+        
+        for skill in skills:
+            norm = normalize_skill(skill)
+            normalized.append(norm)
+            mapping[skill] = norm
+        
+        return jsonify({
+            "success": True,
+            "original": skills,
+            "normalized": list(set(normalized)),  # Unique değerler
+            "mapping": mapping
+        })
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@app.route('/api/skills/extract', methods=['POST'])
+def extract_skills_endpoint():
+    """
+    Metin içinden becerileri çıkar ve kategorize et.
+    
+    Request body:
+    {
+        "text": "I have 5 years of experience with JavaScript, Node.js, and React..."
+    }
+    
+    Response:
+    {
+        "success": true,
+        "skills": {
+            "raw_skills": ["JavaScript", "Node.js", "React"],
+            "normalized_skills": ["javascript", "node.js", "react"],
+            "skill_categories": {
+                "programming_languages": ["javascript"],
+                "frameworks": ["node.js", "react"],
+                ...
+            }
+        }
+    }
+    """
+    try:
+        data = request.json
+        text = data.get('text', '')
+        
+        if not text:
+            return jsonify({
+                "success": False,
+                "error": "text gerekli"
+            }), 400
+        
+        skills_data = extract_skills_from_cv(text)
+        
+        return jsonify({
+            "success": True,
+            "skills": skills_data
+        })
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@app.route('/api/skills/synonyms', methods=['GET'])
+def get_skill_synonyms():
+    """
+    Tüm skill synonym mapping'lerini döndür.
+    
+    Response:
+    {
+        "success": true,
+        "synonyms": {
+            "javascript": ["javascript", "js", "ecmascript", ...],
+            "python": ["python", "py", "python3", ...],
+            ...
+        },
+        "total_skills": 50,
+        "total_synonyms": 200
+    }
+    """
+    total_synonyms = sum(len(syns) for syns in SKILL_SYNONYMS.values())
+    
+    return jsonify({
+        "success": True,
+        "synonyms": SKILL_SYNONYMS,
+        "total_skills": len(SKILL_SYNONYMS),
+        "total_synonyms": total_synonyms
+    })
 
 @app.route('/api/user/stats', methods=['GET'])
 def user_stats():
