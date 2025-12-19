@@ -36,5 +36,5 @@ externalPort = 80
 
 [deployment]
 deploymentTarget = "autoscale"
-run = ["bash", "-c", "cd backend && python app.py & cd web-app && npm run dev"]
-build = ["npm", "install", "--prefix", "web-app"]
+run = ["bash", "-c", "cd backend && python app.py"]
+build = ["bash", "-c", "cd backend && pip install -r requirements.txt"]

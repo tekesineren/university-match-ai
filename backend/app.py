@@ -1707,8 +1707,8 @@ except ImportError as e:
 
 
 if __name__ == '__main__':
-    # Use port 5001 for backend (frontend uses 5000)
-    port = int(os.environ.get('PORT', 5001))
+    # Use PORT from environment (Replit sets this), default to 5000
+    port = int(os.environ.get('PORT', 5000))
     
     # In deployment (when PORT is set), bind to 0.0.0.0
     # In development, bind to localhost only
