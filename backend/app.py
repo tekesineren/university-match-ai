@@ -9,6 +9,7 @@ import json
 import os
 import re
 import io
+from datetime import datetime, date
 
 # =============================================================================
 # SYNONYM MAPPING SYSTEM - Teknoloji ve Beceri Eşleştirme
@@ -1631,32 +1632,128 @@ def stripe_webhook():
 
 @app.route('/api/universities', methods=['GET'])
 def get_universities():
-    """Tüm okulları listele"""
-    return jsonify({"universities": UNIVERSITIES})
+    """
+    Tüm okulları listele.
+    Query params:
+        - include_expired: true/false (default: false)
+        - country: Filter by country
+    """
+    include_expired = request.args.get('include_expired', 'false').lower() == 'true'
+    country_filter = request.args.get('country', '').strip()
+    
+    universities_with_status = []
+    expired_count = 0
+    
+    for university in UNIVERSITIES:
+        # Country filter
+        if country_filter and university.get('country', '').lower() != country_filter.lower():
+            continue
+        
+        # Deadline kontrolü
+        has_active, next_deadline, days_remaining = has_active_deadline(university)
+        
+        if not has_active and not include_expired:
+            expired_count += 1
+            continue
+        
+        uni_copy = university.copy()
+        uni_copy['deadline_status'] = {
+            'has_active': has_active,
+            'next_deadline': next_deadline,
+            'days_remaining': days_remaining,
+            'urgency': 'critical' if days_remaining and days_remaining <= 7 else 
+                      'warning' if days_remaining and days_remaining <= 30 else 'normal'
+        }
+        universities_with_status.append(uni_copy)
+    
+    return jsonify({
+        "universities": universities_with_status,
+        "total": len(universities_with_status),
+        "expired_hidden": expired_count,
+        "showing_active_only": not include_expired
+    })
+
+def has_active_deadline(university):
+    """
+    Üniversitenin aktif (geçmemiş) bir deadline'ı var mı kontrol et.
+    
+    Returns:
+        tuple: (has_active, next_deadline_str, days_remaining)
+    """
+    deadlines = university.get('deadlines', {})
+    if not deadlines:
+        # Deadline bilgisi yoksa varsayılan olarak göster
+        return True, None, None
+    
+    today = date.today()
+    active_deadlines = []
+    
+    for term, deadline_str in deadlines.items():
+        try:
+            deadline_date = datetime.strptime(deadline_str, "%Y-%m-%d").date()
+            if deadline_date >= today:
+                days_remaining = (deadline_date - today).days
+                active_deadlines.append({
+                    'term': term,
+                    'date': deadline_str,
+                    'days_remaining': days_remaining
+                })
+        except (ValueError, TypeError):
+            continue
+    
+    if active_deadlines:
+        # En yakın deadline'ı döndür
+        closest = min(active_deadlines, key=lambda x: x['days_remaining'])
+        return True, closest['date'], closest['days_remaining']
+    
+    return False, None, None
+
 
 @app.route('/api/match', methods=['POST'])
 @rate_limit
 def match_universities():
     """
-    Kullanıcı verilerine göre okulları eşleştir ve sırala
+    Kullanıcı verilerine göre okulları eşleştir ve sırala.
+    Deadline'ı geçmiş üniversiteler otomatik filtrelenir.
     
     Request body:
     {
         "gpa": 3.8,
         "language_score": 110,
         "motivation_letter": "...",
-        "background": ["engineering", "robotics"]
+        "background": ["engineering", "robotics"],
+        "include_expired": false  // Opsiyonel: true ise geçmiş deadline'ları da göster
     }
     """
     try:
         user_data = request.json
+        include_expired = user_data.get('include_expired', False)
         
-        # Her okul için skor hesapla
+        # Her okul için skor hesapla ve deadline kontrolü yap
         matched_universities = []
+        expired_count = 0
+        
         for university in UNIVERSITIES:
+            # Deadline kontrolü
+            has_active, next_deadline, days_remaining = has_active_deadline(university)
+            
+            if not has_active and not include_expired:
+                expired_count += 1
+                continue  # Geçmiş deadline'ları atla
+            
             university_copy = university.copy()
             match_score = calculate_match_score(user_data, university)
             university_copy['match_score'] = match_score
+            
+            # Deadline bilgisini ekle
+            university_copy['deadline_status'] = {
+                'has_active': has_active,
+                'next_deadline': next_deadline,
+                'days_remaining': days_remaining,
+                'urgency': 'critical' if days_remaining and days_remaining <= 7 else 
+                          'warning' if days_remaining and days_remaining <= 30 else 'normal'
+            }
+            
             matched_universities.append(university_copy)
         
         # Sort by score (highest to lowest)
@@ -1676,7 +1773,12 @@ def match_universities():
                 "low_match": low_match,
                 "extra_options": extra_options
             },
-            "user_data": user_data
+            "user_data": user_data,
+            "filtered_info": {
+                "expired_universities_hidden": expired_count,
+                "showing_active_deadlines_only": not include_expired,
+                "tip": "Add 'include_expired': true to see all universities"
+            }
         })
     
     except Exception as e:
