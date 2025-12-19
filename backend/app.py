@@ -1173,30 +1173,46 @@ def root():
     """Root endpoint - API information"""
     return jsonify({
         "name": "University Match AI API",
-        "version": "1.4",
+        "version": "2.0",
         "status": "running",
+        "tiers": {
+            "basic": "Free - Sınırsız eşleştirme, CV parsing",
+            "premium": "$19/mo - AI Agent, Document Checklist, Deadline Tracking"
+        },
         "features": {
             "skill_synonym_mapping": "JavaScript=JS=Node.js style normalization",
             "cv_parsing": "PDF and DOCX support with smart extraction",
-            "university_matching": "Advanced scoring algorithm"
+            "university_matching": "Advanced scoring algorithm",
+            "ai_agent": "Claude Opus 4.5 personal assistant (Premium)",
+            "document_checklist": "Smart document tracking (Premium)",
+            "deadline_tracking": "Never miss a deadline (Premium)"
         },
         "endpoints": {
-            "health": "GET /api/health",
-            "universities": "GET /api/universities",
-            "match": "POST /api/match",
-            "parse_cv": "POST /api/parse-cv",
-            "feedback": "POST /api/feedback",
-            "skills_normalize": "POST /api/skills/normalize - Normalize skill names",
-            "skills_extract": "POST /api/skills/extract - Extract skills from text",
-            "skills_synonyms": "GET /api/skills/synonyms - Get all synonym mappings",
-            "user_stats": "GET /api/user/stats",
-            "user_upgrade": "POST /api/user/upgrade",
-            "api_key_create": "POST /api/api-key/create",
-            "checkout_create": "POST /api/checkout/create",
-            "webhook_stripe": "POST /api/webhook/stripe"
+            "core": {
+                "health": "GET /api/health",
+                "universities": "GET /api/universities",
+                "match": "POST /api/match",
+                "parse_cv": "POST /api/parse-cv"
+            },
+            "skills": {
+                "normalize": "POST /api/skills/normalize",
+                "extract": "POST /api/skills/extract",
+                "synonyms": "GET /api/skills/synonyms"
+            },
+            "pricing": {
+                "pricing": "GET /api/pricing - Full pricing page data",
+                "tiers": "GET /api/pricing/tiers",
+                "features": "GET /api/pricing/features",
+                "user_tier": "GET /api/user/tier",
+                "can_access": "GET /api/user/can-access/<feature_id>"
+            },
+            "premium": {
+                "ai_chat": "POST /api/ai-agent/chat (Premium)",
+                "ai_capabilities": "GET /api/ai-agent/capabilities"
+            }
         },
-        "documentation": "See README.md and SETUP_GUIDE.md for detailed documentation",
-        "web_app": "Access the web interface at http://localhost:5173",
+        "documentation": "See README.md and SETUP_GUIDE.md",
+        "web_app": "http://localhost:5173",
         "github": "https://github.com/tekesineren/university-match-ai"
     })
 
@@ -1465,6 +1481,17 @@ def match_universities():
             "success": False,
             "error": str(e)
         }), 400
+
+# =============================================================================
+# PRICING & PREMIUM ROUTES
+# =============================================================================
+try:
+    from pricing import register_pricing_routes
+    register_pricing_routes(app)
+    print("✅ Pricing routes registered")
+except ImportError as e:
+    print(f"⚠️ Pricing module not loaded: {e}")
+
 
 if __name__ == '__main__':
     # Use port 5001 for backend (frontend uses 5000)
