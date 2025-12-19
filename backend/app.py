@@ -1492,6 +1492,16 @@ try:
 except ImportError as e:
     print(f"⚠️ Pricing module not loaded: {e}")
 
+# =============================================================================
+# TOKEN SYSTEM & AI AGENTS
+# =============================================================================
+try:
+    from token_system import register_token_routes
+    register_token_routes(app)
+    print("✅ Token system routes registered")
+except ImportError as e:
+    print(f"⚠️ Token system not loaded: {e}")
+
 
 if __name__ == '__main__':
     # Use port 5001 for backend (frontend uses 5000)
