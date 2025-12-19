@@ -64,7 +64,7 @@ function Pricing({ onClose }) {
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 
-        (import.meta.env.DEV ? '/api' : 'https://master-application-agent-production.up.railway.app/api')
+        (import.meta.env.DEV ? '/api' : 'https://hynops.com/api')
       
       const response = await fetch(`${apiUrl}/checkout/create`, {
         method: 'POST',
@@ -146,7 +146,7 @@ function Pricing({ onClose }) {
         <div className="pricing-footer">
           <p>💳 Güvenli ödeme - Stripe ile korunuyor</p>
           <p>🔄 İstediğiniz zaman iptal edebilirsiniz</p>
-          <p>❓ Sorularınız mı var? <a href="mailto:support@masterapplicationagent.com">Bizimle iletişime geçin</a></p>
+          <p>❓ Sorularınız mı var? <a href="mailto:support@hynops.com">Bizimle iletişime geçin</a></p>
         </div>
       </div>
     </div>

@@ -55,9 +55,9 @@ function App() {
     setError(null)
     
     try {
-      // API URL'i belirle - production'da env'den, development'da proxy kullan
+      // API URL'i belirle - production'da hynops.com, development'da proxy kullan
       const apiUrl = import.meta.env.VITE_API_URL || 
-        (import.meta.env.DEV ? '/api' : 'https://master-application-agent.onrender.com/api')
+        (import.meta.env.DEV ? '/api' : 'https://hynops.com/api')
       
       console.log('API URL:', apiUrl)
       
@@ -306,8 +306,8 @@ function App() {
             ← CV Yükleme Ekranına Dön
           </button>
           <header className="app-header">
-            <h1>🎓 Master Application Agent</h1>
-            <p>Master programınız için en uygun okulları bulun</p>
+            <h1>🎓 Hynops</h1>
+            <p>AI destekli üniversite eşleştirme ve başvuru yönetimi</p>
           </header>
           {error && (
             <div className="error-message">

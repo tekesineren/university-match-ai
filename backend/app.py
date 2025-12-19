@@ -257,7 +257,110 @@ CORS(app, resources={
     }
 })
 
-# University database (can be converted to a real database in the future)
+# =============================================================================
+# DOCUMENT TEMPLATES (Üniversitelere eklenecek standart belgeler)
+# =============================================================================
+
+# Standart belge şablonları - Ülkeye göre özelleştirilebilir
+DOCUMENT_TEMPLATES = {
+    "cv": {
+        "type": "cv",
+        "name": "Curriculum Vitae",
+        "formats": ["pdf"],
+        "max_size_mb": 2,
+        "required": True,
+        "tips": "Academic CV format, 1-2 pages"
+    },
+    "transcript": {
+        "type": "transcript",
+        "name": "Official Transcript",
+        "formats": ["pdf"],
+        "max_size_mb": 5,
+        "required": True,
+        "tips": "Must be officially sealed"
+    },
+    "motivation": {
+        "type": "motivation_letter",
+        "name": "Statement of Purpose",
+        "formats": ["pdf", "docx"],
+        "max_size_mb": 1,
+        "required": True,
+        "word_limit": {"min": 500, "max": 1000},
+        "tips": "Explain why this program and your goals"
+    },
+    "recommendation_2": {
+        "type": "recommendation",
+        "name": "Letters of Recommendation",
+        "formats": ["pdf"],
+        "max_size_mb": 2,
+        "required": True,
+        "count": 2,
+        "tips": "From professors or employers"
+    },
+    "recommendation_3": {
+        "type": "recommendation",
+        "name": "Letters of Recommendation",
+        "formats": ["pdf"],
+        "max_size_mb": 2,
+        "required": True,
+        "count": 3,
+        "tips": "At least 2 academic references"
+    },
+    "toefl": {
+        "type": "language_cert",
+        "name": "English Proficiency (TOEFL/IELTS)",
+        "formats": ["pdf"],
+        "max_size_mb": 2,
+        "required": True,
+        "accepted_tests": ["TOEFL iBT", "IELTS Academic"],
+        "tips": "Must be valid (within 2 years)"
+    },
+    "passport": {
+        "type": "passport",
+        "name": "Passport Copy",
+        "formats": ["pdf", "jpg"],
+        "max_size_mb": 3,
+        "required": True,
+        "tips": "Bio page, valid for program duration"
+    },
+    "gre": {
+        "type": "gre",
+        "name": "GRE Score",
+        "formats": ["pdf"],
+        "max_size_mb": 2,
+        "required": False,
+        "tips": "Recommended but not always required"
+    },
+    "portfolio": {
+        "type": "portfolio",
+        "name": "Portfolio/Projects",
+        "formats": ["pdf", "url"],
+        "max_size_mb": 10,
+        "required": False,
+        "tips": "GitHub or personal website"
+    }
+}
+
+def get_standard_docs(country, recommendation_count=2, gre_required=False):
+    """Ülkeye göre standart belge listesi oluştur"""
+    docs = [
+        DOCUMENT_TEMPLATES["cv"].copy(),
+        DOCUMENT_TEMPLATES["transcript"].copy(),
+        DOCUMENT_TEMPLATES["motivation"].copy(),
+        DOCUMENT_TEMPLATES[f"recommendation_{recommendation_count}"].copy() if recommendation_count in [2, 3] else DOCUMENT_TEMPLATES["recommendation_2"].copy(),
+        DOCUMENT_TEMPLATES["toefl"].copy(),
+        DOCUMENT_TEMPLATES["passport"].copy()
+    ]
+    
+    # USA için GRE genellikle gerekli
+    if country == "USA" or gre_required:
+        gre = DOCUMENT_TEMPLATES["gre"].copy()
+        gre["required"] = True
+        docs.append(gre)
+    
+    return docs
+
+# University database with document requirements
 UNIVERSITIES = [
     {
         "id": 1,
@@ -265,9 +368,14 @@ UNIVERSITIES = [
         "program": "MSc in Robotics, Systems and Control",
         "country": "Switzerland",
         "min_gpa": 3.5,
-        "min_language_score": 100,  # TOEFL veya IELTS eşdeğeri
+        "min_language_score": 100,
         "required_background": ["engineering", "robotics", "control systems"],
-        "match_score": 0  # Hesaplanacak
+        "match_score": 0,
+        "required_documents": get_standard_docs("Switzerland", 2),
+        "optional_documents": [DOCUMENT_TEMPLATES["portfolio"]],
+        "deadlines": {"fall_2025": "2024-12-15", "spring_2026": "2025-07-15"},
+        "application_fee": {"amount": 150, "currency": "CHF"},
+        "application_url": "https://ethz.ch/apply"
     },
     {
         "id": 2,
@@ -277,7 +385,12 @@ UNIVERSITIES = [
         "min_gpa": 3.7,
         "min_language_score": 100,
         "required_background": ["engineering", "mechanical engineering"],
-        "match_score": 0
+        "match_score": 0,
+        "required_documents": get_standard_docs("USA", 3, gre_required=True),
+        "optional_documents": [DOCUMENT_TEMPLATES["portfolio"]],
+        "deadlines": {"fall_2025": "2024-12-15"},
+        "application_fee": {"amount": 75, "currency": "USD"},
+        "application_url": "https://gradadmissions.mit.edu"
     },
     {
         "id": 3,
@@ -287,7 +400,12 @@ UNIVERSITIES = [
         "min_gpa": 3.8,
         "min_language_score": 100,
         "required_background": ["computer science", "engineering", "mathematics"],
-        "match_score": 0
+        "match_score": 0,
+        "required_documents": get_standard_docs("USA", 3, gre_required=True),
+        "optional_documents": [DOCUMENT_TEMPLATES["portfolio"]],
+        "deadlines": {"fall_2025": "2024-12-04"},
+        "application_fee": {"amount": 125, "currency": "USD"},
+        "application_url": "https://gradadmissions.stanford.edu"
     },
     {
         "id": 4,
@@ -297,7 +415,12 @@ UNIVERSITIES = [
         "min_gpa": 3.6,
         "min_language_score": 100,
         "required_background": ["robotics", "engineering", "computer science"],
-        "match_score": 0
+        "match_score": 0,
+        "required_documents": get_standard_docs("USA", 3, gre_required=True),
+        "optional_documents": [DOCUMENT_TEMPLATES["portfolio"]],
+        "deadlines": {"fall_2025": "2024-12-01"},
+        "application_fee": {"amount": 75, "currency": "USD"},
+        "application_url": "https://www.ri.cmu.edu/education/academic-programs/master-of-science-robotics/"
     },
     {
         "id": 5,
@@ -307,7 +430,12 @@ UNIVERSITIES = [
         "min_gpa": 3.5,
         "min_language_score": 90,
         "required_background": ["electrical engineering", "computer science", "engineering"],
-        "match_score": 0
+        "match_score": 0,
+        "required_documents": get_standard_docs("USA", 3, gre_required=False),
+        "optional_documents": [DOCUMENT_TEMPLATES["gre"], DOCUMENT_TEMPLATES["portfolio"]],
+        "deadlines": {"fall_2025": "2025-01-06"},
+        "application_fee": {"amount": 135, "currency": "USD"},
+        "application_url": "https://grad.berkeley.edu"
     },
     {
         "id": 6,
@@ -317,7 +445,12 @@ UNIVERSITIES = [
         "min_gpa": 3.5,
         "min_language_score": 92,
         "required_background": ["robotics", "engineering", "mechanical engineering"],
-        "match_score": 0
+        "match_score": 0,
+        "required_documents": get_standard_docs("UK", 2),
+        "optional_documents": [DOCUMENT_TEMPLATES["portfolio"]],
+        "deadlines": {"fall_2025": "2025-01-15"},
+        "application_fee": {"amount": 80, "currency": "GBP"},
+        "application_url": "https://www.imperial.ac.uk/study/apply/postgraduate-taught/"
     },
     {
         "id": 7,
@@ -327,7 +460,12 @@ UNIVERSITIES = [
         "min_gpa": 3.7,
         "min_language_score": 110,
         "required_background": ["computer science", "mathematics", "engineering"],
-        "match_score": 0
+        "match_score": 0,
+        "required_documents": get_standard_docs("UK", 2),
+        "optional_documents": [DOCUMENT_TEMPLATES["portfolio"]],
+        "deadlines": {"fall_2025": "2024-12-03"},
+        "application_fee": {"amount": 75, "currency": "GBP"},
+        "application_url": "https://www.graduate.study.cam.ac.uk"
     },
     {
         "id": 8,
@@ -337,7 +475,12 @@ UNIVERSITIES = [
         "min_gpa": 3.5,
         "min_language_score": 100,
         "required_background": ["robotics", "engineering", "control systems"],
-        "match_score": 0
+        "match_score": 0,
+        "required_documents": get_standard_docs("Switzerland", 2),
+        "optional_documents": [DOCUMENT_TEMPLATES["portfolio"]],
+        "deadlines": {"fall_2025": "2025-01-15", "spring_2026": "2025-09-15"},
+        "application_fee": {"amount": 150, "currency": "CHF"},
+        "application_url": "https://www.epfl.ch/education/admission/"
     },
     {
         "id": 9,
@@ -347,7 +490,12 @@ UNIVERSITIES = [
         "min_gpa": 3.3,
         "min_language_score": 90,
         "required_background": ["robotics", "engineering", "mechanical engineering"],
-        "match_score": 0
+        "match_score": 0,
+        "required_documents": get_standard_docs("Netherlands", 2),
+        "optional_documents": [DOCUMENT_TEMPLATES["portfolio"]],
+        "deadlines": {"fall_2025": "2025-01-15"},
+        "application_fee": {"amount": 100, "currency": "EUR"},
+        "application_url": "https://www.tudelft.nl/onderwijs/opleidingen/masters"
     },
     {
         "id": 10,
@@ -357,7 +505,12 @@ UNIVERSITIES = [
         "min_gpa": 3.4,
         "min_language_score": 88,
         "required_background": ["robotics", "computer science", "engineering"],
-        "match_score": 0
+        "match_score": 0,
+        "required_documents": get_standard_docs("Germany", 2),
+        "optional_documents": [DOCUMENT_TEMPLATES["portfolio"]],
+        "deadlines": {"fall_2025": "2025-01-15", "spring_2026": "2025-05-31"},
+        "application_fee": {"amount": 0, "currency": "EUR"},
+        "application_url": "https://www.tum.de/en/studies/application"
     },
     {
         "id": 11,
@@ -367,7 +520,12 @@ UNIVERSITIES = [
         "min_gpa": 3.5,
         "min_language_score": 100,
         "required_background": ["computer science", "mathematics", "engineering"],
-        "match_score": 0
+        "match_score": 0,
+        "required_documents": get_standard_docs("Switzerland", 2),
+        "optional_documents": [DOCUMENT_TEMPLATES["portfolio"]],
+        "deadlines": {"fall_2025": "2024-12-15"},
+        "application_fee": {"amount": 150, "currency": "CHF"},
+        "application_url": "https://ethz.ch/apply"
     },
     {
         "id": 12,
@@ -377,7 +535,12 @@ UNIVERSITIES = [
         "min_gpa": 3.5,
         "min_language_score": 100,
         "required_background": ["robotics", "engineering", "computer science"],
-        "match_score": 0
+        "match_score": 0,
+        "required_documents": get_standard_docs("USA", 3, gre_required=False),
+        "optional_documents": [DOCUMENT_TEMPLATES["gre"], DOCUMENT_TEMPLATES["portfolio"]],
+        "deadlines": {"fall_2025": "2025-01-01"},
+        "application_fee": {"amount": 85, "currency": "USD"},
+        "application_url": "https://grad.gatech.edu"
     },
     {
         "id": 13,
@@ -387,7 +550,12 @@ UNIVERSITIES = [
         "min_gpa": 3.7,
         "min_language_score": 110,
         "required_background": ["computer science", "mathematics", "engineering"],
-        "match_score": 0
+        "match_score": 0,
+        "required_documents": get_standard_docs("UK", 3),
+        "optional_documents": [DOCUMENT_TEMPLATES["portfolio"]],
+        "deadlines": {"fall_2025": "2025-01-20"},
+        "application_fee": {"amount": 75, "currency": "GBP"},
+        "application_url": "https://www.ox.ac.uk/admissions/graduate/"
     },
     {
         "id": 14,
@@ -397,7 +565,12 @@ UNIVERSITIES = [
         "min_gpa": 3.3,
         "min_language_score": 93,
         "required_background": ["mechanical engineering", "engineering"],
-        "match_score": 0
+        "match_score": 0,
+        "required_documents": get_standard_docs("Canada", 3),
+        "optional_documents": [DOCUMENT_TEMPLATES["gre"]],
+        "deadlines": {"fall_2025": "2025-01-15"},
+        "application_fee": {"amount": 125, "currency": "CAD"},
+        "application_url": "https://www.sgs.utoronto.ca/admissions/"
     },
     {
         "id": 15,
@@ -407,7 +580,12 @@ UNIVERSITIES = [
         "min_gpa": 3.4,
         "min_language_score": 85,
         "required_background": ["mechanical engineering", "engineering"],
-        "match_score": 0
+        "match_score": 0,
+        "required_documents": get_standard_docs("Singapore", 2),
+        "optional_documents": [DOCUMENT_TEMPLATES["gre"]],
+        "deadlines": {"fall_2025": "2025-01-15"},
+        "application_fee": {"amount": 50, "currency": "SGD"},
+        "application_url": "https://www.nus.edu.sg/admissions/graduate"
     },
     {
         "id": 16,
@@ -417,7 +595,12 @@ UNIVERSITIES = [
         "min_gpa": 3.3,
         "min_language_score": 83,
         "required_background": ["robotics", "engineering", "computer science"],
-        "match_score": 0
+        "match_score": 0,
+        "required_documents": get_standard_docs("South Korea", 2),
+        "optional_documents": [DOCUMENT_TEMPLATES["portfolio"]],
+        "deadlines": {"fall_2025": "2025-03-15", "spring_2026": "2025-09-15"},
+        "application_fee": {"amount": 80000, "currency": "KRW"},
+        "application_url": "https://admission.kaist.ac.kr"
     },
     {
         "id": 17,
@@ -427,7 +610,12 @@ UNIVERSITIES = [
         "min_gpa": 3.4,
         "min_language_score": 90,
         "required_background": ["computer science", "engineering", "mathematics"],
-        "match_score": 0
+        "match_score": 0,
+        "required_documents": get_standard_docs("Japan", 2),
+        "optional_documents": [DOCUMENT_TEMPLATES["portfolio"]],
+        "deadlines": {"fall_2025": "2024-12-01"},
+        "application_fee": {"amount": 30000, "currency": "JPY"},
+        "application_url": "https://www.u-tokyo.ac.jp/en/admissions/graduate.html"
     },
     {
         "id": 18,
@@ -437,7 +625,12 @@ UNIVERSITIES = [
         "min_gpa": 3.3,
         "min_language_score": 90,
         "required_background": ["robotics", "control systems", "engineering"],
-        "match_score": 0
+        "match_score": 0,
+        "required_documents": get_standard_docs("Sweden", 2),
+        "optional_documents": [DOCUMENT_TEMPLATES["portfolio"]],
+        "deadlines": {"fall_2025": "2025-01-15"},
+        "application_fee": {"amount": 900, "currency": "SEK"},
+        "application_url": "https://www.kth.se/en/studies/master/application"
     },
     {
         "id": 19,
@@ -447,7 +640,12 @@ UNIVERSITIES = [
         "min_gpa": 3.2,
         "min_language_score": 92,
         "required_background": ["electrical engineering", "engineering", "control systems"],
-        "match_score": 0
+        "match_score": 0,
+        "required_documents": get_standard_docs("Finland", 2),
+        "optional_documents": [DOCUMENT_TEMPLATES["portfolio"]],
+        "deadlines": {"fall_2025": "2025-01-03"},
+        "application_fee": {"amount": 0, "currency": "EUR"},
+        "application_url": "https://www.aalto.fi/en/admission-services"
     },
     {
         "id": 20,
@@ -457,7 +655,12 @@ UNIVERSITIES = [
         "min_gpa": 3.4,
         "min_language_score": 92,
         "required_background": ["robotics", "engineering", "computer science"],
-        "match_score": 0
+        "match_score": 0,
+        "required_documents": get_standard_docs("UK", 2),
+        "optional_documents": [DOCUMENT_TEMPLATES["portfolio"]],
+        "deadlines": {"fall_2025": "2025-01-15"},
+        "application_fee": {"amount": 60, "currency": "GBP"},
+        "application_url": "https://www.ed.ac.uk/studying/postgraduate/applying"
     }
 ]
 
