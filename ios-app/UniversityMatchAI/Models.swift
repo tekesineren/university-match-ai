@@ -70,16 +70,38 @@ struct University: Codable, Identifiable, Hashable {
     }
 }
 
+// MARK: - User Input Model (Simplified)
+/// InputView tarafından kullanılan basitleştirilmiş kullanıcı girişi
+struct UserInput {
+    let gpa: Double
+    let languageScore: Int
+    let motivationLetter: String
+    let background: [String]
+
+    /// UserProfile'a dönüştür (API isteği için)
+    func toUserProfile() -> UserProfile {
+        UserProfile(
+            gpa: gpa,
+            languageTestType: "toefl",
+            languageTestScore: languageScore,
+            background: background,
+            motivationLetter: motivationLetter
+        )
+    }
+}
+
 // MARK: - API Response Models
 
 /// Match API response modeli
 struct MatchResponse: Codable {
     let success: Bool
     let results: MatchResults?
+    let userData: [String: String]?
     let error: String?
     
     enum CodingKeys: String, CodingKey {
         case success, results, error
+        case userData = "user_data"
     }
 }
 

@@ -21,7 +21,11 @@ class APIService {
     ///   Örnek: `http://192.168.1.100:5000/api`
     /// - Production için: Backend'in deploy edildiği URL'i kullanın
     ///   Örnek: `https://your-backend.railway.app/api`
+    #if DEBUG
     static let baseURL = "http://localhost:5000/api"
+    #else
+    static let baseURL = "https://master-application-agent.onrender.com/api"
+    #endif
     
     /// Request timeout süresi (saniye)
     static let timeout: TimeInterval = 30.0
@@ -139,6 +143,12 @@ class APIService {
             method: "POST",
             body: requestBody
         )
+    }
+    
+    /// Basitleştirilmiş kullanıcı girişi ile eşleştir
+    /// InputView tarafından kullanılır
+    static func matchUniversities(userInput: UserInput) async throws -> MatchResponse {
+        return try await matchUniversities(profile: userInput.toUserProfile())
     }
     
     // MARK: - Future Endpoints (Not yet implemented)
