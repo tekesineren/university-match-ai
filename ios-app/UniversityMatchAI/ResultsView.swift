@@ -1,6 +1,6 @@
 //
 //  ResultsView.swift
-//  MasterApplicationAgent
+//  UniversityMatchAI
 //
 //  Sonuç ekranı - eşleşen okulları gösterir
 //

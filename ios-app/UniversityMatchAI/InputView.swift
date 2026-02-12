@@ -1,6 +1,6 @@
 //
 //  InputView.swift
-//  MasterApplicationAgent
+//  UniversityMatchAI
 //
 //  Kullanıcı giriş ekranı
 //

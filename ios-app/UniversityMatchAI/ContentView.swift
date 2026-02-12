@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  MasterApplicationAgent
+//  UniversityMatchAI
 //
 //  Ana ekran - InputView'ı gösterir
 //
