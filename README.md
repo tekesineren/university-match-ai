@@ -198,6 +198,19 @@ For comprehensive setup instructions with troubleshooting, see:
   - Common errors and solutions
   - Verification checklist
 
+### 📱 iOS App Setup
+
+iOS uygulaması için sadece **`web-app/`** klasörü gereklidir. Backend zaten `hynops.com/api` adresinde çalışmaktadır.
+
+```bash
+cd web-app
+npm install
+npm run ios:init    # İlk seferde: iOS platformunu ekler
+npm run ios:build   # Build edip Xcode'u açar
+```
+
+Detaylı rehber: **[IOS_APP_GUIDE.md](IOS_APP_GUIDE.md)** — Hangi klasörler gerekli, App Store'a yükleme adımları ve SSS.
+
 - **[GETTING_STARTED.md](GETTING_STARTED.md)** - Quick start guide for beginners
 
 ---

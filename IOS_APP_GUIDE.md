@@ -6,6 +6,47 @@ Bu rehber, mevcut web uygulamasını Capacitor kullanarak iOS uygulamasına dön
 
 ---
 
+## 📂 Hangi Klasörler Gerekli?
+
+**Tüm klasörleri indirmenize gerek yok!** iOS uygulaması için sadece **`web-app/`** klasörü yeterlidir.
+
+### Klasör Rehberi
+
+| Klasör | iOS İçin Gerekli mi? | Açıklama |
+|--------|:--------------------:|----------|
+| **`web-app/`** | ✅ **EVET** | Ana uygulama kodu. iOS uygulaması bu klasörden build edilir |
+| `backend/` | ❌ Hayır | Backend API sunucusu. Zaten `hynops.com/api` adresinde çalışıyor, ayrıca kurmanıza gerek yok |
+| `ios-app/` | ❌ Hayır | Eski Swift prototipi - **kullanılmıyor**, Capacitor kullanıyoruz |
+| `ios-app-expo/` | ❌ Hayır | Eski Expo prototipi - **kullanılmıyor**, Capacitor kullanıyoruz |
+| `examples/` | ❌ Hayır | Sadece örnek veri dosyaları |
+| `attached_assets/` | ❌ Hayır | Ek dosyalar |
+| Kök dizindeki `.md` dosyaları | ❌ Hayır | Dokümantasyon dosyaları (bu rehber dahil) |
+
+### Hızlı İndirme (Sadece Gerekli Klasör)
+
+Tüm repo'yu indirmek istemiyorsanız, sadece `web-app/` klasörünü indirebilirsiniz:
+
+**Yöntem 1 — Tüm repo'yu klonla (en kolay):**
+```bash
+git clone https://github.com/tekesineren/university-match-ai.git
+cd university-match-ai/web-app
+npm install
+```
+
+**Yöntem 2 — Sadece web-app klasörünü klonla (sparse checkout):**
+```bash
+git clone --no-checkout --filter=blob:none https://github.com/tekesineren/university-match-ai.git
+cd university-match-ai
+git sparse-checkout set web-app
+git checkout
+cd web-app
+npm install
+```
+
+> **💡 İpucu:** Yöntem 1 daha kolay ve önerilen yoldur. Tüm repo ~5MB civarıdır.
+
+---
+
 ## 📋 Gereksinimler
 
 | Gereksinim | Açıklama |
@@ -204,11 +245,17 @@ Bu, web uygulamasını build edip iOS projesine kopyalar. Ardından Xcode'dan te
 
 ## ❓ Sık Sorulan Sorular
 
+### Tüm klasörleri indirmem gerekiyor mu?
+**Hayır!** Sadece `web-app/` klasörü yeterlidir. Diğer klasörler (`ios-app/`, `ios-app-expo/`, `backend/`, `examples/`) iOS uygulaması için gerekli değildir. Detaylar için yukarıdaki [Hangi Klasörler Gerekli?](#-hangi-klasörler-gerekli) bölümüne bakın.
+
 ### Uygulama web versiyonuyla aynı mı?
 Evet. Capacitor, web uygulamasını native WebView içinde çalıştırır. UI, algoritma ve tüm işlevsellik **birebir aynıdır**.
 
 ### Backend ayrı mı çalışıyor?
-Evet. Backend (`hynops.com/api`) web ve iOS versiyonu tarafından ortaklaşa kullanılır. Ayrı bir backend kurmaya gerek yoktur.
+Evet. Backend (`hynops.com/api`) web ve iOS versiyonu tarafından ortaklaşa kullanılır. Ayrı bir backend kurmaya gerek yoktur. Backend kodu (`backend/` klasörü) zaten sunucuda çalışıyor — indirmenize veya çalıştırmanıza gerek yok.
+
+### ios-app/ ve ios-app-expo/ klasörleri ne?
+Bunlar eski prototiplerdir ve artık kullanılmıyor. iOS uygulaması **Capacitor** ile `web-app/` klasöründen build ediliyor. Bu klasörleri indirmenize veya kullanmanıza gerek yok.
 
 ### iOS'a özel değişiklikler neler?
 - **Safe area desteği:** iPhone notch/çentik alanları için CSS padding
