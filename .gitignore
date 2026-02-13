@@ -97,3 +97,9 @@ dist/
 # Deployment
 .railway/
 railway.json
+
+# Capacitor iOS build artifacts
+web-app/ios/App/Pods/
+web-app/ios/DerivedData/
+web-app/ios/*.xcworkspace/xcuserdata/
+web-app/ios/*.xcodeproj/xcuserdata/

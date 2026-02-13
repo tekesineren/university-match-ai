@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import { validateCVFile, extractTextFromFile, validateCVContent } from '../utils/cvParser'
+import { getApiUrl } from '../utils/api'
 import './CVUpload.css'
 
 // Helper function for status error messages
@@ -80,16 +81,8 @@ function CVUpload({ onCVUpload, onManualEntry }) {
       const formData = new FormData()
       formData.append('cv', file)
       
-      // API URL'i belirle - Vite proxy kullan
-      let apiUrl = import.meta.env.VITE_API_URL
-      if (!apiUrl) {
-        if (import.meta.env.DEV) {
-          // Development'ta Vite proxy kullan
-          apiUrl = '/api'
-        } else {
-          apiUrl = 'https://master-application-agent-production.up.railway.app/api'
-        }
-      }
+      // API URL'i belirle
+      const apiUrl = getApiUrl()
       
       console.log('🌐 API URL:', apiUrl)
       console.log('📤 Backend\'e gönderiliyor...')
