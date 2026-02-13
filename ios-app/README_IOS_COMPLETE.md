@@ -5,32 +5,18 @@
 
 ---
 
-## 🔰 Yeni Başlayanlar İçin
-
-**Xcode'u ilk kez kullanıyorsanız → [XCODE_ADIM_ADIM_REHBER.md](XCODE_ADIM_ADIM_REHBER.md)**
-
-Bu rehber, sıfırdan Xcode kurulumundan App Store'a yüklemeye kadar tüm adımları ekran ekran anlatır.
-
----
-
 ## 📚 Rehber İndeksi
 
-### 1. 🔰 Adım Adım Başlangıç (Yeni!)
-- **[XCODE_ADIM_ADIM_REHBER.md](XCODE_ADIM_ADIM_REHBER.md)** - Xcode kurulumu, projeyi açma, signing, test, archive ve App Store'a yükleme
-
-### 2. 🚀 Kurulum ve Yapı
+### 1. 🚀 Başlangıç ve Kurulum
 - **[IOS_SETUP_GUIDE.md](IOS_SETUP_GUIDE.md)** - Xcode projesi kurulumu, dosya yapısı, backend entegrasyonu
 
-### 3. 🔌 REST API Entegrasyonu
+### 2. 🔌 REST API Entegrasyonu
 - **[REST_API_EXAMPLE.md](REST_API_EXAMPLE.md)** - Backend'den veri çekme, POST request, error handling örnekleri
 
-### 4. 🎨 UI/UX
+### 3. 🎨 UI/UX
 - **[ICON_LAUNCH_SCREEN_GUIDE.md](ICON_LAUNCH_SCREEN_GUIDE.md)** - App icon ve launch screen ekleme rehberi
 
-### 5. 🚀 App Store Yayınlama
-- **[APP_STORE_GUIDE.md](APP_STORE_GUIDE.md)** - App Store'a yayınlama detaylı rehber
-
-### 6. 🔀 Git Workflow
+### 4. 🔀 Git Workflow
 - **[../../GIT_WORKFLOW_GUIDE.md](../../GIT_WORKFLOW_GUIDE.md)** - Branch, commit ve push işlemleri
 
 ---
@@ -39,89 +25,84 @@ Bu rehber, sıfırdan Xcode kurulumundan App Store'a yüklemeye kadar tüm adım
 
 ```
 ios-app/
-├── UniversityMatchAI.xcodeproj/       # Xcode proje dosyası (bunu açın!)
-│   ├── project.pbxproj                # Proje yapılandırması
-│   └── xcshareddata/xcschemes/        # Build şemaları
-├── UniversityMatchAI/                  # Swift kaynak kodları
-│   ├── UniversityMatchAIApp.swift     # @main giriş noktası
-│   ├── ContentView.swift              # Ana ekran container
-│   ├── InputView.swift                # Kullanıcı giriş formu
-│   ├── ResultsView.swift              # Eşleştirme sonuçları ekranı
-│   ├── Models.swift                   # Veri modelleri (University, UserProfile, vb.)
-│   ├── APIService.swift               # Backend API ile iletişim servisi
-│   ├── Info.plist                     # Uygulama yapılandırması
-│   ├── Assets.xcassets/               # App icon ve renkler
-│   └── Preview Content/               # SwiftUI önizleme kaynakları
-├── ExportOptions.plist                # App Store export ayarları
-├── XCODE_ADIM_ADIM_REHBER.md         # 🔰 Adım adım Xcode rehberi
-├── APP_STORE_GUIDE.md                 # App Store yayınlama rehberi
-├── IOS_SETUP_GUIDE.md                 # Kurulum ve API rehberi
-├── ICON_LAUNCH_SCREEN_GUIDE.md        # İkon ve launch screen rehberi
-├── REST_API_EXAMPLE.md                # API entegrasyon örnekleri
-├── README.md                          # Hızlı başlangıç
-└── README_IOS_COMPLETE.md             # Bu dosya (indeks)
+├── Models.swift                    ✅ Backend API ile uyumlu veri modelleri
+├── APIService.swift                ✅ REST API servisi (tüm endpoint'ler)
+├── ContentView.swift               ✅ Ana navigation container
+├── InputView.swift                 ⚠️ Eski versiyon (güncelleme gerekebilir)
+├── ResultsView.swift               ⚠️ Eski versiyon (güncelleme gerekebilir)
+│
+├── README.md                       📖 Temel iOS app açıklaması
+├── IOS_SETUP_GUIDE.md             📖 Kurulum ve yapı rehberi
+├── REST_API_EXAMPLE.md            📖 API entegrasyon örnekleri
+├── ICON_LAUNCH_SCREEN_GUIDE.md    📖 Icon/Launch screen setup
+└── README_IOS_COMPLETE.md         📖 Bu dosya (indeks)
 ```
 
 ---
 
 ## ✅ Tamamlanan Özellikler
 
-### ✅ Xcode Projesi
-- [x] `UniversityMatchAI.xcodeproj` — hazır Xcode projesi
-- [x] `UniversityMatchAIApp.swift` — `@main` giriş noktası
-- [x] `Info.plist` — App Transport Security, versiyon, launch screen
-- [x] `Assets.xcassets` — AppIcon ve AccentColor
-- [x] `ExportOptions.plist` — App Store export yapılandırması
-
 ### ✅ Veri Modelleri
-- [x] `UserProfile` — Backend API ile tam uyumlu
-- [x] `UserInput` — InputView için basitleştirilmiş model
-- [x] `University` — Üniversite modeli
-- [x] `MatchResponse` — API response modelleri
+- [x] `UserProfile` - Backend API ile tam uyumlu
+- [x] `University` - Üniversite modeli
+- [x] `MatchResponse` - API response modelleri
 - [x] Error handling modelleri
 
 ### ✅ API Servisi
 - [x] Health check endpoint
 - [x] Universities list endpoint
 - [x] Match universities endpoint
-- [x] Error handling ve debug logging
-- [x] Debug/Release URL yapılandırması
-
-### ✅ SwiftUI Ekranları
-- [x] `ContentView` — Ana ekran container
-- [x] `InputView` — GPA, dil skoru, background, motivasyon mektubu formu
-- [x] `ResultsView` — Yüksek/Orta/Düşük eşleşme sonuçları
+- [x] Error handling ve retry mekanizması
+- [x] Debug logging
 
 ### ✅ Dokümantasyon
-- [x] Adım adım Xcode rehberi (XCODE_ADIM_ADIM_REHBER.md)
-- [x] App Store yayınlama rehberi
 - [x] Kurulum rehberi
 - [x] REST API örnekleri
+- [x] Login form örneği
 - [x] Icon/Launch screen rehberi
+- [x] Git workflow rehberi
 
 ---
 
 ## 🚀 Hızlı Başlangıç
 
-### 1. Projeyi Xcode'da Açın
+### 1. Xcode Projesi Oluştur
 ```bash
-cd ios-app
-open UniversityMatchAI.xcodeproj
+# Xcode'da yeni iOS App projesi oluştur
+# Interface: SwiftUI
+# Language: Swift
 ```
 
-### 2. Backend'i Başlatın
+### 2. Dosyaları Ekle
+```bash
+# ios-app/ klasöründeki Swift dosyalarını Xcode'a ekle:
+# - Models.swift
+# - APIService.swift
+# - ContentView.swift
+```
+
+### 3. Backend'i Başlat
 ```bash
 cd backend
-pip install -r requirements.txt
 python app.py
 # Backend http://localhost:5000 adresinde çalışacak
 ```
 
-### 3. Simulator'da Çalıştırın
-- Xcode'da bir iPhone simulator seçin (örn: iPhone 15)
-- `⌘ + R` ile çalıştırın
+### 4. API URL'ini Ayarla
+```swift
+// APIService.swift içinde:
+static let baseURL = "http://localhost:5000/api"
+// Gerçek iPhone için: "http://[BILGISAYAR_IP]:5000/api"
+```
 
-> 🔰 **Detaylı adımlar için:** [XCODE_ADIM_ADIM_REHBER.md](XCODE_ADIM_ADIM_REHBER.md)
+### 5. Test Et
+```swift
+// ContentView içinde:
+Task {
+    let universities = try await APIService.getUniversities()
+    print("✅ Universities loaded: \(universities.count)")
+}
+```
 
 ---
 
@@ -181,34 +162,28 @@ Task {
 ## 📱 Geliştirme Checklist
 
 ### Temel Kurulum
-- [x] Xcode projesi oluşturuldu
-- [x] Swift dosyaları eklendi
+- [ ] Xcode projesi oluşturuldu
+- [ ] Swift dosyaları eklendi
 - [ ] Backend çalışıyor
-- [x] API URL doğru ayarlandı (Debug/Release)
+- [ ] API URL doğru ayarlandı
 
 ### UI/UX
-- [ ] App icon eklendi (1024x1024 PNG)
-- [ ] Launch screen özelleştirildi (opsiyonel)
-- [x] Temel navigation yapıldı
-- [x] Loading state'leri gösteriliyor
-- [x] Error handling çalışıyor
+- [ ] App icon eklendi
+- [ ] Launch screen oluşturuldu
+- [ ] Temel navigation yapıldı
+- [ ] Loading state'leri gösteriliyor
+- [ ] Error handling çalışıyor
 
 ### API Entegrasyonu
-- [x] Health check çalışıyor
-- [x] Universities list görüntüleniyor
-- [x] Match universities çalışıyor
-- [x] Error messages gösteriliyor
+- [ ] Health check çalışıyor
+- [ ] Universities list görüntüleniyor
+- [ ] Match universities çalışıyor
+- [ ] Error messages gösteriliyor
 
 ### Test
 - [ ] Simulator'da test edildi
 - [ ] Gerçek cihazda test edildi
-
-### App Store
-- [ ] Apple Developer Program üyeliği alındı
-- [ ] Signing yapılandırıldı
-- [ ] Archive oluşturuldu
-- [ ] App Store Connect'e yüklendi
-- [ ] Review'a gönderildi
+- [ ] Farklı network durumları test edildi
 
 ---
 
@@ -277,13 +252,12 @@ Yeni özellik veya iyileştirme önerileri için:
 
 ## 📝 Notlar
 
-- **Backend URL**: Debug'da `localhost:5000`, Release'de production URL otomatik kullanılır
-- **iOS Version**: Minimum iOS 16.0 (SwiftUI)
-- **Xcode Version**: Xcode 15+ önerilir
-- **Swift Version**: 5.0
+- **Backend URL**: Development için `localhost:5000`, production için backend URL'i güncelleyin
+- **iOS Version**: Minimum iOS 14.0 (SwiftUI için)
+- **Xcode Version**: Xcode 14+ önerilir
 
 ---
 
-**Son Güncelleme:** Şubat 2026  
-**Versiyon:** 2.0
+**Son Güncelleme:** Kasım 2024  
+**Versiyon:** 1.0
 
