@@ -1,16 +1,38 @@
 {
   "appId": "com.masterapplicationagent.app",
-  "appName": "Master Application Agent",
+  "appName": "Hynops",
   "webDir": "dist",
-  "bundledWebRuntime": false,
   "server": {
-    "iosScheme": "masterapp"
+    "iosScheme": "capacitor",
+    "allowNavigation": ["hynops.com", "*.hynops.com"]
+  },
+  "ios": {
+    "contentInset": "automatic",
+    "allowsLinkPreview": false,
+    "scrollEnabled": true,
+    "backgroundColor": "#667eea",
+    "preferredContentMode": "mobile"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "launchAutoHide": true,
+      "backgroundColor": "#667eea",
+      "showSpinner": true,
+      "spinnerColor": "#ffffff",
+      "launchFadeOutDuration": 500,
+      "splashImmersive": true
+    },
+    "StatusBar": {
+      "style": "LIGHT",
+      "backgroundColor": "#667eea"
+    },
+    "Keyboard": {
+      "resize": "body",
+      "resizeOnFullScreen": true
+    }
   }
 }
-
-
-
-
 
 
 

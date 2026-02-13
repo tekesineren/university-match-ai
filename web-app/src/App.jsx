@@ -6,6 +6,7 @@ import CoreMetrics from './components/CoreMetrics'
 import Pricing from './components/Pricing'
 import Success from './components/Success'
 import UpdateNotification from './components/UpdateNotification'
+import { getApiUrl } from './utils/api'
 import './App.css'
 
 function App() {
@@ -55,9 +56,8 @@ function App() {
     setError(null)
     
     try {
-      // API URL'i belirle - production'da hynops.com, development'da proxy kullan
-      const apiUrl = import.meta.env.VITE_API_URL || 
-        (import.meta.env.DEV ? '/api' : 'https://hynops.com/api')
+      // API URL'i belirle
+      const apiUrl = getApiUrl()
       
       console.log('API URL:', apiUrl)
       

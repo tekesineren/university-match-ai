@@ -1,8 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @layer base {
   * {
@@ -13,12 +13,23 @@
 
   html {
     scroll-behavior: smooth;
+    /* iOS rubber band scroll için */
+    overscroll-behavior-y: none;
   }
 
   body {
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* iOS safe area desteği */
+    padding-top: var(--safe-area-top, 0px);
+    padding-bottom: var(--safe-area-bottom, 0px);
+    padding-left: var(--safe-area-left, 0px);
+    padding-right: var(--safe-area-right, 0px);
+    /* iOS tap highlight kaldır */
+    -webkit-tap-highlight-color: transparent;
+    /* iOS text size adjust */
+    -webkit-text-size-adjust: 100%;
     @apply bg-white dark:bg-gray-950 text-gray-900 dark:text-white transition-colors duration-300;
   }
 
